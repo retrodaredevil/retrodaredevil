@@ -1,4 +1,11 @@
 ### Hi there 👋
+Student Git: https://git.mst.edu/jdsfz4
+<br/>
+GitLab: https://gitlab.com/retrodaredevil
+<br/>
+Bitbucket: https://bitbucket.org/retrodaredevil
+<br/>
+Stackoverflow: https://stackoverflow.com/users/5434860/retodaredevil
 
 <!--
 **retrodaredevil/retrodaredevil** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
