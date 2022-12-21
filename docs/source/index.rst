@@ -10,5 +10,21 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
 
-   tutorial/index
+   tutorial/openttd
+
+.. toctree::
+   :maxdepth: 1
+   :caption: External Tutorials
+
+   Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Other Docs
+
+   SolarThing <https://solarthing.readthedocs.org/>
+   Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
