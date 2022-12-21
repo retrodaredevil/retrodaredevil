@@ -1,14 +1,24 @@
-OpenTTD
-========
+OpenTTD Server
+================
 
 OpenTTD is a fun and free game: https://www.openttd.org/
+This tutorial shows how to set up a server for multiplayer.
+
+Screenshots: https://www.openttd.org/screenshots
+
+.. figure:: https://www.openttd.org/screenshots/1.9-darkuk-2.png
+  :width: 500px
+
+
+Server Setup
+--------------
 
 You should generate a ``.sav`` file locally using the OpenTTD client.
 
 .. code-block:: shell
 
   cd /opt/containers/
-  # Replace MyGame with something of your choosing. The name of this does not matter, but it will be the name of your docker container
+  # Replace "MyGame" with something of your choosing here and in the configuration below
   mkdir -p openttd/MyGame
   cd openttd/MyGame
   mkdir -p openttd/save/autosave/
@@ -18,6 +28,7 @@ You should generate a ``.sav`` file locally using the OpenTTD client.
 Now you are ready to edit ``docker-compose.yml``. Put these contents in that file.
 
 .. code-block:: yaml
+
   version: "3.7"
   services:
     openttd-MyGame:

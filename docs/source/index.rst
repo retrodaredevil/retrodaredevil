@@ -14,6 +14,7 @@ Contents
    :caption: Tutorials
 
    tutorial/openttd
+   tutorial/minecraft
 
 .. toctree::
    :maxdepth: 1
@@ -28,3 +29,11 @@ Contents
 
    SolarThing <https://solarthing.readthedocs.org/>
    Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: WIP
+
+   tutorial/openrct2
+   tutorial/guacamole
+   tutorial/vaultwarden
