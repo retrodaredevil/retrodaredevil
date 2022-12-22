@@ -15,6 +15,7 @@ Contents
 
    tutorial/openttd
    tutorial/minecraft
+   tutorial/guacamole
 
 .. toctree::
    :maxdepth: 1
@@ -35,5 +36,4 @@ Contents
    :caption: WIP
 
    tutorial/openrct2
-   tutorial/guacamole
    tutorial/vaultwarden

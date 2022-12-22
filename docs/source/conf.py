@@ -17,6 +17,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.extlinks',
 ]
 
 intersphinx_mapping = {
@@ -33,3 +34,8 @@ html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+# Based on https://github.com/wildmountainfarms/solarthing-docs/blob/78341f6a55b910e4036d15107e582920bcb104a4/docs/source/conf.py#L40
+extlinks = {
+    'docker-hub': ('https://hub.docker.com/r/%s', '%s'),
+}

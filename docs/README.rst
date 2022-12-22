@@ -39,3 +39,6 @@ I recommend using VS Code to edit. Press CTRL+P and paste the below to setup rec
 
 Once you install ``lextudio.restructuredtext``, you will be asked to install the language server after enabling. 
 Say yes. In the top right, there is an "Open preview" button.
+
+In VS Code, opening links will result in a new browser window: https://stackoverflow.com/a/64700513/5434860.
+To resolve, navigate to ``about:profiles`` in the new window and make the "default-release" profile the default profile.
