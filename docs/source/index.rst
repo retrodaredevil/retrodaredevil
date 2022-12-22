@@ -37,3 +37,11 @@ Contents
 
    tutorial/openrct2
    tutorial/vaultwarden
+   tutorial/virtualbox
+
+
+TODO
+------
+
+* Create tutorial for setting up server of: https://www.simutrans.com/en/download/
+* Create tutorial for setting up https://www.kasmweb.com/

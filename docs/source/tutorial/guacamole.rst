@@ -68,6 +68,15 @@ This will utilize :docker-hub:`guacamole/guacamole`, :docker-hub:`guacamole/guac
   #    ports: # Uncomment these lines if you are not using a reverse proxy and want to directly expose an HTTP endpoint
   #      - 8080:8080/tcp
       restart: unless-stopped
+    phpvirtualbox:
+      container_name: phpvirtualbox
+      image: jazzdd/phpvirtualbox
+      environment:
+        SRV1_HOSTPORT: "172.17.0.1:18083"
+        SRV1_NAME: "Default Server"
+        SRV1_USER: "user1"
+        SRV1_PW: "test"
+      restart: unless-stopped
 
 
   # Optionally include this if you specify the DOCKER_MY_NETWORK inside of your .env file
@@ -86,12 +95,10 @@ Using Guacamole
 ----------------
 
 Now that you have guacamole up and running, navigate to the web page in your browser.
-Note that the path must be ``http(s)://myurl.myurl/guacamole``. (Appent ``/guacamole`` to the end of your url).
+Note that the path must be ``http(s)://myurl.myurl/guacamole``. (Append ``/guacamole`` to the end of your url).
 To login, use ``guacadmin/guacadmin``. Navigate to settings > Preferences to change your password.
 
 
-Adding VirtualBox
--------------------
 
 Eventually I will put documentation here for setting up a virtualbox using these links:
 https://stackoverflow.com/questions/25741904/is-it-possible-to-run-virtualbox-inside-a-docker-container
