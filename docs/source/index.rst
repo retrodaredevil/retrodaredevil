@@ -15,6 +15,7 @@ Contents
 
    tutorial/openttd
    tutorial/minecraft
+   tutorial/virtualbox
    tutorial/guacamole
 
 .. toctree::
@@ -37,7 +38,6 @@ Contents
 
    tutorial/openrct2
    tutorial/vaultwarden
-   tutorial/virtualbox
 
 
 TODO
