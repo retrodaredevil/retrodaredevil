@@ -14,6 +14,7 @@ Contents
    :caption: Tutorials
 
    tutorial/openttd
+   tutorial/openrct2
    tutorial/minecraft
    tutorial/virtualbox
    tutorial/guacamole
@@ -36,7 +37,6 @@ Contents
    :maxdepth: 1
    :caption: WIP
 
-   tutorial/openrct2
    tutorial/vaultwarden
 
 

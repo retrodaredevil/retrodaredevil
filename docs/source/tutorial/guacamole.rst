@@ -82,7 +82,7 @@ Now that you have ``docker-compose.yml`` complete, you can start the containers 
 
   This particular tutorial assumes that you can figure out how to access guacamole:8080 over a reverse proxy or directly.
 
-Using Guacamole
+Configuring Guacamole
 ----------------
 
 Now that you have guacamole up and running, navigate to the web page in your browser.
@@ -92,3 +92,11 @@ To login, use ``guacadmin/guacadmin``. Navigate to settings > Preferences to cha
 To connect to an RDP server, simply add a connection and connect to it.
 
 
+
+Using Guacamole
+----------------
+
+After logging into a machine, it pretty much just works.
+Copying and pasting text doesn't always work flawlessly, so be sure to check this out: https://guacamole.apache.org/doc/gug/using-guacamole.html#the-guacamole-menu.
+Alternatively, go to ``about:config`` in Firefox and set ``dom.events.testing.asyncClipboard`` to true.
+This allows the extraction of the clipboard, but not the pasting of clipboard content. This is not at all flawless.

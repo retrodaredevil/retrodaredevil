@@ -127,6 +127,12 @@ that is the default authentication method used by vboxwebsrv.
   On Linux, the name of the default authentication module is VBoxAuth.
   Another option is VBoxAuthSimple, which requires some extra configuration described here: https://www.virtualbox.org/manual/ch07.html#vbox-auth
 
+.. note:: 
+
+  If you are installing Windows inside a VM and need a product key, you might be able to use
+  the product key present on one of your computers that USED to run Windows.
+  Use this command: ``sudo strings /sys/firmware/acpi/tables/MSDM``.
+
 Now you can create VMs at will. I find it easiest to download an ISO online and place it in the ``/home/vbox/Downloads`` directory.
 Add that file to a create VM's IDE storage drive.
 At this point, you can either start the VM now and configure it, or start it after configuring RDP.
@@ -137,6 +143,24 @@ If you are not using Guacamole, Remmina is a good choice that runs locally.
 To configure a VM's RDP, click on the VM, go to its settings, then go to Display>Remote Display and enable RDP.
 Set the port range to "3389" instead of "3389-4389".
 Set the Authentication to "External". This allows you to use the login credentials of any users on the computer.
+
+Sharing Files
+----------------
+
+To share files between the host machine and VMs, in RemoteBox go to Shared Folders in the settings and configure a shared folder.
+While configuring this shared folder, make sure the machine is off, or you check the "permanent" check box.
+
+.. code-block::
+
+  cd /home/vbox
+  sudo mkdir Shared/
+  sudo chown vbox:vboxusers Shared/
+
+(On windows VM): 
+Install VBox Guest Additions: https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html.
+Install it by opening the iso and running the installation executable. After it completes, reboot when prompted.
+Create folder on desktop called "Shared Folder". Right click and select Sharing > Advanced Sharing. Check "share this folder".
+In a file browser, click on Network on the left side, it should prompt to turn on network discovery and file sharing.
 
 
 
