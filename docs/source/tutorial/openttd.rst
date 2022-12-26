@@ -9,6 +9,17 @@ Screenshots: https://www.openttd.org/screenshots
 .. figure:: https://www.openttd.org/screenshots/1.9-darkuk-2.png
   :width: 500px
 
+Save file creation
+-------------------
+
+Create the save file using the client.
+When creating the save file, I recommend changing some of the defaults. Some of these settings cannot be changed later.
+
+* Choose a climate: https://wiki.openttd.org/en/Manual/Climates
+* Add mod "New GRF" - "Some vehicles never expire"
+* Terrain type: "Very Flat" - we don't like 
+* Make all the map edges water
+
 
 Server Setup
 --------------
@@ -56,3 +67,26 @@ To attach to the container and send commands, first run ``docker ps`` and get th
 Once you have that ID, run ``docker attach <CONTAINER ID>``.
 
 
+Edit ``openttd.cfg``
+----------------------
+
+Recommended changes to make
+
+Settings
+  
+* When paused allow: "all actions"
+* Airports never expire: on
+* Vehicles never expire: on
+* Vehicle breakdowns: none
+* Number of plane crashes: reduced
+* Environment > Authorities
+
+  * Town council's attitude towards area restructuring: Permissive
+  * Towns are allowed to build grade crossings: Off
+
+* Town cargo generation: Quadratic
+* Flat area around industries: 4 tiles
+
+Direct changes to make
+
+* Edit ``network.min_active_clients`` to 1 so that the game automatically pauses when no players are connected
