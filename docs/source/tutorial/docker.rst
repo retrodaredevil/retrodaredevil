@@ -16,12 +16,16 @@ Many tutorials in this documentation will use ``docker-compose.yml`` files.
 Useful Commands
 -----------------
 
+.. _docker_compose_attach:
+
 Attach to a compose file's container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+First, make sure that ``jq`` is installed: ``sudo apt-get install -y jq``.
+Then, copy this code into a file called ``compose-attach`` somewhere in your ``$PATH`` and make it executable.
+
 .. code-block:: shell
 
-  sudo apt-get install -y jq
   #!/usr/bin/env bash
   argument="$1"
   if [ ! -n "$argument" ]; then
