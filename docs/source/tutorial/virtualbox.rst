@@ -1,8 +1,7 @@
 VirtualBox
 ===========
 
-VirtualBox is an awesome piece of software. The goal of this tutorial is to run it headless and use phpVirtualBox
-to expose a web interface to configure VirtualBox.
+VirtualBox is an awesome piece of software. The goal of this tutorial is to run it headless and use RemoteBox to configure VirtualBox.
 
 This tutorial uses `VirtualBox <https://www.virtualbox.org>`_.
 

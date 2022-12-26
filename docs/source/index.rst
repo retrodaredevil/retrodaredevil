@@ -9,35 +9,40 @@ You can see my `github here <https://github.com/retrodaredevil>`_.
 Contents
 --------
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Tutorials
-
-   tutorial/openttd
-   tutorial/openrct2
-   tutorial/minecraft
-   tutorial/virtualbox
-   tutorial/guacamole
 
 .. toctree::
-   :maxdepth: 1
-   :caption: External Tutorials
+  :maxdepth: 2
+  :caption: Tutorials
 
-   Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
+  tutorial/docker
+  tutorial/openttd
+  tutorial/openrct2
+  tutorial/minecraft
+  tutorial/virtualbox
+  tutorial/guacamole
+  tutorial/plex
+  tutorial/vaultwarden
+
+.. toctree::
+  :maxdepth: 2
+  :caption: External Tutorials
+
+  Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
 
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Other Docs
+  :maxdepth: 2
+  :caption: Other Docs
 
-   SolarThing <https://solarthing.readthedocs.org/>
-   Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
+  SolarThing <https://solarthing.readthedocs.org/>
+  Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
+
 
 .. toctree::
-   :maxdepth: 1
-   :caption: WIP
+  :maxdepth: 2
+  :caption: WIP
 
-   tutorial/vaultwarden
+  tutorial/simutrans
 
 
 TODO
@@ -45,3 +50,8 @@ TODO
 
 * Create tutorial for setting up server of: https://www.simutrans.com/en/download/
 * Create tutorial for setting up https://www.kasmweb.com/
+* Check out
+
+  * https://github.com/rembo10/headphones (Replaced by Lidarr)
+  * https://github.com/butlerx/wetty (Web terminal)
+  * https://github.com/mylar3/mylar3 and https://vaemendis.net/ubooquity/
