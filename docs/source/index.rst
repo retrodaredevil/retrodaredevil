@@ -55,3 +55,5 @@ TODO
   * https://github.com/rembo10/headphones (Replaced by Lidarr)
   * https://github.com/butlerx/wetty (Web terminal)
   * https://github.com/mylar3/mylar3 and https://vaemendis.net/ubooquity/
+
+* Create docker image and tutorial for https://github.com/upscayl/upscayl
