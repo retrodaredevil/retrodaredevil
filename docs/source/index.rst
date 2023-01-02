@@ -57,3 +57,18 @@ TODO
   * https://github.com/mylar3/mylar3 and https://vaemendis.net/ubooquity/
 
 * Create docker image and tutorial for https://github.com/upscayl/upscayl
+* Check out VM managers besides RemoteBox
+
+  * VirtualBox and Vagrant: https://www.vagrantup.com/ (`github <https://github.com/hashicorp/vagrant>`_)
+  * Cockpit: https://www.redhat.com/sysadmin/manage-virtual-machines-cockpit
+  * virt-manager: https://virt-manager.org/
+
+* Check out VirtualBox alternatives such as
+
+  * Qemu https://github.com/qemu/qemu (tutorial here: https://christitus.com/vm-setup-in-linux/)
+  * Vmware https://www.vmware.com/
+  * Proxmox https://www.proxmox.com/en/
+    
+    * Setup scripts here: https://github.com/tteck/Proxmox
+
+* Create tutorial for duplicity: https://duplicity.gitlab.io/

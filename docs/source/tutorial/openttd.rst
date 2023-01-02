@@ -83,6 +83,8 @@ Now you are ready to edit ``docker-compose.yml``. Put these contents in that fil
         - "savename=main.sav"
         - "PUID=2000"
         - "PGID=2000"
+        - "XDG_CONFIG_HOME=/home/openttd/.config"
+        - "XDG_DATA_HOME=/home/openttd/.local/share"
       volumes:
         - ./openttd:/home/openttd/.openttd  # the bateau/openttd script will only look in this directoy for save files
         - ./openttd:/home/openttd/.local/share/openttd  # openttd itself will use this directory for its save files and other files
@@ -93,7 +95,8 @@ Now you are ready to edit ``docker-compose.yml``. Put these contents in that fil
 .. note:: 
 
   If something doesn't work with the above directories, you can check out the documentation for the weirdness that is OpenTTD's directorys:
-  https://github.com/OpenTTD/OpenTTD/blob/master/docs/directory_structure.md
+  https://github.com/OpenTTD/OpenTTD/blob/master/docs/directory_structure.md.
+  You can see an issue talking about directory weirdness here: https://github.com/OpenTTD/OpenTTD/issues/8073
 
 Now you can start the server using ``docker compose up -d``.
 It should be easy to connect to the server, but allowing players to do anything can be difficult.
@@ -148,6 +151,11 @@ Other commands
 * Get IDs of all companies: ``players`` or ``companies``.
 * Remove company: ``reset_company <company ID>``
 * Get expired vehicles back: ``resetengines`` `more details <https://wiki.openttd.org/en/Archive/Manual/Settings/Never%20expire%20vehicles>`_.
+
+Helpful tips
+--------------
+
+* Building cool railway stations: https://wiki.openttd.org/en/Manual/Railway%20station
 
 
 TODO
