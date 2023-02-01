@@ -6,6 +6,10 @@ Guacamole is a remote desktop gateway. More info here: https://guacamole.incubat
 This tutorial will be based off of https://github.com/boschkundendienst/guacamole-docker-compose.
 This will utilize :docker-hub:`guacamole/guacamole`, :docker-hub:`guacamole/guacd` and :docker-hub:`_/postgres`.
 
+.. note::
+
+  If you don't like this tutorial, check out this one: https://blog.gurucomputing.com.au/remote-administration-with-guacamole/1-installing-guacamole/
+
 .. code-block:: shell
 
   cd /opt/containers
@@ -83,7 +87,7 @@ Now that you have ``docker-compose.yml`` complete, you can start the containers 
   This particular tutorial assumes that you can figure out how to access guacamole:8080 over a reverse proxy or directly.
 
 Configuring Guacamole
-----------------
+-----------------------
 
 Now that you have guacamole up and running, navigate to the web page in your browser.
 Note that the path must be ``http(s)://myurl.myurl/guacamole``. (Append ``/guacamole`` to the end of your url).

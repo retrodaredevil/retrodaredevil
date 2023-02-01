@@ -22,12 +22,14 @@ Contents
   tutorial/guacamole
   tutorial/plex
   tutorial/vaultwarden
+  tutorial/filesystem
 
 .. toctree::
   :maxdepth: 2
   :caption: External Tutorials
 
   Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
+  linuxserver.io <https://docs.linuxserver.io/>
 
 
 .. toctree::
@@ -43,6 +45,7 @@ Contents
   :caption: WIP
 
   tutorial/simutrans
+  tutorial/arr
 
 
 TODO
@@ -72,3 +75,6 @@ TODO
     * Setup scripts here: https://github.com/tteck/Proxmox
 
 * Create tutorial for duplicity: https://duplicity.gitlab.io/
+* Create tutorial for Usenet using https://hub.docker.com/r/linuxserver/sabnzbd
+* Create tutorial for LibreOffice using :docker-hub:`linuxserver/docker-libreoffice`
+* Create tutorial for Immich
