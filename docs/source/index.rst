@@ -74,7 +74,7 @@ TODO
     
     * Setup scripts here: https://github.com/tteck/Proxmox
 
-* Create tutorial for duplicity: https://duplicity.gitlab.io/
+* Create tutorial for duplicity backups https://duplicity.gitlab.io/ or just simple rsync
 * Create tutorial for Usenet using https://hub.docker.com/r/linuxserver/sabnzbd
 * Create tutorial for LibreOffice using :docker-hub:`linuxserver/docker-libreoffice`
 * Create tutorial for Immich
