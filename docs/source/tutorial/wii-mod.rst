@@ -32,3 +32,15 @@ You put games in a location such as ``/wbfs/Name of Game/game-asdf [GAMEID].wbfs
 The GAMEID can be found at https://www.gametdb.com/. Sometimes, depending on the file name of the wbfs file, 
 it will work without that specific format, but I don't know exactly what the criteria for the filename is, so I usually stick with what works.
 For instance, Mario Party 8 can be in a location such as ``/wbfs/Mario Party 8 [RM8E01].wbfs`` (or it can be placed in its own directory with that same filename).
+
+Game Specifics
+---------------
+
+Guitar Hero 5
+^^^^^^^^^^^^^^
+
+Launching Guitar Hero 5 via WiiFlow requires IOS222 or IOS223.
+
+* https://gbatemp.net/threads/loading-guitar-hero-5-and-band-hero-error.198404/
+* https://wiibrew.org/wiki/IOS222
+

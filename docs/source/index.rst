@@ -4,6 +4,8 @@ Welcome to retrodaredevil's documentation!
 This contains documentation, resources and blog posts for and by me (Lavender Shannon).
 You can see my `github here <https://github.com/retrodaredevil>`_.
 
+Many of these tutorials may be work in progress. The aim of these tutorials is not to be complete, 
+but to be documentation for myself to refer to.
 
 
 Contents
@@ -23,6 +25,8 @@ Contents
   tutorial/plex
   tutorial/vaultwarden
   tutorial/filesystem
+  tutorial/ssh
+  tutorial/wii-mod
 
 .. toctree::
   :maxdepth: 2

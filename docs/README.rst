@@ -12,6 +12,7 @@ Building
 To build this yourself, run these commands:
 
 .. code-block:: shell
+  sudo apt -y install latexmk
 
   cd docs/
   python3 -m venv .venv
