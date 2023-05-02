@@ -27,6 +27,7 @@ Contents
   tutorial/filesystem
   tutorial/ssh
   tutorial/wii-mod
+  tutorial/react
 
 .. toctree::
   :maxdepth: 2

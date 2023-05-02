@@ -22,6 +22,7 @@ This documents its ``docker-compose.yml`` file and additional add-ons.
         - ./transcode:/transcode
         - /srv/location1/media/public:/data:ro
       devices:
+        # Allows for hardware transcoding
         - "/dev/dri:/dev/dri"
 
 Additions
@@ -34,3 +35,26 @@ Here are some cool programs you can use to supplement your Plex installation:
 * `Varken <https://github.com/Boerderij/Varken>`_ - send Plex statistics to InfluxDB for viewing on a Grafana frontend
 * `Servarr <https://wiki.servarr.com/>`_ has good documentation for things to use alongside Plex
 * Here's a GitHub with many docker compose files: https://github.com/vaeyo/MediaServer-DockerComposeFiles
+
+Transcoding
+--------------
+
+Hardware Transcoding in Docker
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To enable hardware transcoding for a Docker install of plex, you must add ``/dev/dri`` as a device.
+You should not do this if you have an integrated graphics as I have found Plex thinks it's hardware transcoding,
+but is actually worse than if HW transcoding was disabled.
+
+You can run this command to see infomration about your GPU:
+
+.. code-block:: shell
+
+  # Credit to https://askubuntu.com/a/392944/756467
+  lspci | grep ' VGA ' | cut -d" " -f 1 | xargs -i lspci -v -s {}
+
+Subtitles and Transcoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sometimes using subtitles will require Plex to transcode to burn-in the subtitles. More info here:
+https://support.plex.tv/articles/200471133-adding-local-subtitles-to-your-media/

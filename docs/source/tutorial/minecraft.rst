@@ -13,6 +13,10 @@ You can use any server jar you would like. I like to use Spigot. You can follow 
 You will likely need a particular version of Java. I recommend installing SDKMAN: https://sdkman.io/install.
 SDKMAN is easy to install for your local user, so I recommend building the jar file as your local user, rather than with sudo.
 
+.. note:: 
+
+  Running buildtools may alter your ``.gitconfig`` file. More information here: https://www.spigotmc.org/threads/buildtools-jar-messes-with-local-gitconfig.37433/
+
 
 Server Setup
 -------------
