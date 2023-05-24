@@ -31,6 +31,12 @@ Contents
 
 .. toctree::
   :maxdepth: 2
+  :caption: Blog Posts
+
+  blog/2023-05-building-new-server-running-linux
+
+.. toctree::
+  :maxdepth: 2
   :caption: External Tutorials
 
   Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
@@ -51,6 +57,8 @@ Contents
 
   tutorial/simutrans
   tutorial/arr
+  tutorial/qemu
+  tutorial/steam
 
 
 TODO
