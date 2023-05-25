@@ -486,11 +486,368 @@ For fun, my CPU's score in the VM is 21615. At least that is decent I guess.
 Maybe I should try `this tutorial <https://blog.hadenes.io/post/convert-a-proxmox-windows-guest-from-bios-to-uefi/>`_ to see if I can get UEFI mode.
 I have no doubt that there's something I can do to increase the performance of the GPU.
 
-To be continued
-------------------
+Thoughts on the setup so far
+-----------------------------
 
 I got the Windows VM to use my GPU a few days ago, but it's very glitchy and I don't think I could warrant using that for streaming games even if I make it less glitchy.
 I will likely try to get an NVIDIA GPU as I have now learned that Plex supports NVIDIA GPUs if Intel Quick Sync Video is not available.
+
+It looks like this tutorial should help me: https://tizutech.com/plex-transcoding-with-docker-nvidia-gpu/ with `discussion in this reddit post <https://www.reddit.com/r/PleX/comments/virmxi/guide_plex_transcoding_with_docker_nvidia_gpu/>`_.
+
+Should I get an MSI NVIDIA GTX 1650 Ventus XS?
+------------------------------------------------
+
+Now that I'm thinking of getting an NVIDIA GPU, I'm looking at 
+`MSI NVIDIA GeForce GTX 1650 Ventus XS Overclocked Dual-Fan 4GB GDDR6 PCIe Graphics Card <https://www.microcenter.com/product/623511/msi-nvidia-geforce-gtx-1650-ventus-xs-overclocked-dual-fan-4gb-gddr6-pcie-graphics-card>`_.
+I need to do some research on this before getting it. It's $160, so more expensive than the Intel Arc A380 that was only $120.
+But, if I be sure that Plex will hardware transcode with this GPU, I say the extra $40 is worth saving my CPU from doing a bunch of work it doesn't need to do.
+And lucky for me, I should be able to return my Intel Arc A380 within 30 days of purchase: https://community.microcenter.com/kb/articles/28-what-is-the-return-policy.
+
+Encoding/Decoding support
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This page shows the support https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new.
+The GeForce GTX 1650 GDDR6 has encoding support for everything except "HEVC B Frame support" and "AV1".
+It has decoding support for everything except AV1 (8 bit and 10bit).
+`This reddit post <https://www.reddit.com/r/PleX/comments/bgwxmw/just_in_case_you_were_thinking_of_grabbing_a_gtx/>`_ does cast some doubt on whether or not this is actually a good investment.
+
+Getting a GTX 1660 Ti Instead
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+My local microcenter has an openbox for `ASUS NVIDIA GeForce GTX 1660 Ti TUF EVO Overclocked Dual-Fan 6GB GDDR6 PCIe 3.0 Graphics Card <https://www.microcenter.com/product/643923/NVIDIA_GeForce_GTX_1660_Ti_TUF_EVO_Overclocked_Dual-Fan_6GB_GDDR6_PCIe_30_Graphics_Card>`_.
+It costs $183, instead of $230, which is awesome.
+
+Planning on Installing Drivers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I don't have the GTX 1660 Ti yet, but I will soon. These links will help me install the drivers on my shork container.
+
+* https://wiki.debian.org/NvidiaGraphicsDrivers
+
+  * Or instead follow a more friendly looking tutorial: https://phoenixnap.com/kb/nvidia-drivers-debian
+
+* https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html
+
+  * This is another option and requires CUDA support
+
+Using the GTX 1660 Ti
+----------------------
+
+I went ahead and installed it. Easy installation. Computer boots up and outputs to my connected display no problem.
+The host machine (bigger-fish) shows that ``/dev/dri/render128`` is there, but of course it is not present in shork yet.
+I could see about passing that through without much other configuration, but tutorials seem to recommend that I install my GPU's
+drivers on both the host and the container.
+
+First I add ``non-free`` to each line in ``/etc/apt/sources.list``.
+My file now looks like this:
+
+.. code-block::
+
+  deb http://ftp.us.debian.org/debian bullseye main contrib non-free
+
+  deb http://ftp.us.debian.org/debian bullseye-updates main contrib non-free
+
+  # security updates
+  deb http://security.debian.org bullseye-security main contrib non-free
+
+Now we will run these:
+
+.. code-block:: shell
+
+  # on bigger-fish
+  apt-get update
+  apt-get install nvidia-detect
+
+.. code-block:: console
+
+  root@bigger-fish:~# nvidia-detect
+  Detected NVIDIA GPUs:
+  0a:00.0 VGA compatible controller [0300]: NVIDIA Corporation TU116 [GeForce GTX 1660 Ti] [10de:2182] (rev a1)
+
+  Checking card:  NVIDIA Corporation TU116 [GeForce GTX 1660 Ti] (rev a1)
+  Your card is supported by the default drivers.
+  Your card is also supported by the Tesla 470 drivers series.
+  Your card is also supported by the Tesla 450 drivers series.
+  Your card is also supported by the Tesla 418 drivers series.
+  It is recommended to install the
+      nvidia-driver
+  package.
+
+  root@bigger-fish:~# apt-get install nvidia-driver
+
+Worth noting that ``libcuda1:i386 nvidia-driver-libs:i386`` are recommended to be installed. Maybe I'll install those later.
+I am soon prompted that ``Conflicting nouveau kernel module loaded``. All I should have to do is reboot.
+Installation soon finishes so I reboot.
+
+After rebooting ``/dev/dri`` does not exist. So it's time to troubleshoot.
+`NVIDIA Troubleshooting <https://wiki.archlinux.org/title/NVIDIA/Troubleshooting>`_ referse me to 
+`disabling framebuffer <https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Disable_framebuffer>`_.
+So after I edit that, run update-grub and reboot, same thing.
+Alright. Maybe I'll revert that change later.
+
+I mean, it does seem to be using the correct driver:
+
+.. code-block::
+
+  root@bigger-fish:~# lspci -v -s 0a:00.0
+  0a:00.0 VGA compatible controller: NVIDIA Corporation TU116 [GeForce GTX 1660 Ti] (rev a1) (prog-if 00 [VGA controller])
+    Subsystem: ASUSTeK Computer Inc. TU116 [GeForce GTX 1660 Ti]
+    Flags: bus master, fast devsel, latency 0, IRQ 10, IOMMU group 16
+    Memory at fb000000 (32-bit, non-prefetchable) [size=16M]
+    Memory at d0000000 (64-bit, prefetchable) [size=256M]
+    Memory at e0000000 (64-bit, prefetchable) [size=32M]
+    I/O ports at f000 [size=128]
+    Expansion ROM at 000c0000 [disabled] [size=128K]
+    Capabilities: [60] Power Management version 3
+    Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
+    Capabilities: [78] Express Legacy Endpoint, MSI 00
+    Capabilities: [100] Virtual Channel
+    Capabilities: [250] Latency Tolerance Reporting
+    Capabilities: [258] L1 PM Substates
+    Capabilities: [128] Power Budgeting <?>
+    Capabilities: [420] Advanced Error Reporting
+    Capabilities: [600] Vendor Specific Information: ID=0001 Rev=1 Len=024 <?>
+    Capabilities: [900] Secondary PCI Express
+    Capabilities: [bb0] Physical Resizable BAR
+    Kernel modules: nvidia
+
+  root@bigger-fish:~
+
+It seems like someone is having a `similar issue <https://superuser.com/questions/1724160/linux-modprob-cannot-load-nvidia-driver>`_.
+No resolution.
+I'm going to try first installing the ``pve-headers``. Before that I will remove everything I have just installed and confirm it's all working upon reboot.
+Reboot and... It works!!
+``/dev/nvidia0`` exists! Running ``nvidia-smi`` works too!
+
+.. code-block:: console
+
+  root@bigger-fish:~# nvidia-smi
+  Wed May 24 22:24:37 2023       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 470.182.03   Driver Version: 470.182.03   CUDA Version: 11.4     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |                               |                      |               MIG M. |
+  |===============================+======================+======================|
+  |   0  NVIDIA GeForce ...  On   | 00000000:0A:00.0  On |                  N/A |
+  | 26%   41C    P8    13W / 120W |      1MiB /  5941MiB |      0%      Default |
+  |                               |                      |                  N/A |
+  +-------------------------------+----------------------+----------------------+
+                                                                                
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                                  |
+  |  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+  |        ID   ID                                                   Usage      |
+  |=============================================================================|
+  |  No running processes found                                                 |
+  +-----------------------------------------------------------------------------+
+
+Passing the GPU through to shork
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Passing the GPU through here is a little different because we need to allow the container to use the host's GPU, 
+rather than just let a single VM use the GPU.
+This tutorial will help us: https://passbe.com/2020/gpu-nvidia-passthrough-on-proxmox-lxc-container/ (skip to the part after installing drivers).
+
+Edit ``/etc/modules-load.d/nvidia.conf`` to contain:
+
+.. code-block::
+
+  nvidia-drm
+  nvidia
+  nvidia_uvm
+
+Create ``/etc/udev/rules.d/70-nvidia.rules`` and add:
+
+.. code-block::
+
+  # Create /nvidia0, /dev/nvidia1 … and /nvidiactl when nvidia module is loaded
+  KERNEL=="nvidia", RUN+="/bin/bash -c '/usr/bin/nvidia-smi -L && /bin/chmod 666 /dev/nvidia*'"
+  # Create the CUDA node when nvidia_uvm CUDA module is loaded
+  KERNEL=="nvidia_uvm", RUN+="/bin/bash -c '/usr/bin/nvidia-modprobe -c0 -u && /bin/chmod 0666 /dev/nvidia-uvm*'"
+
+Now reboot. Now I take note of this command:
+
+.. code-block:: console
+
+  root@bigger-fish:~# ls -la /dev/nvidia* /dev/dri
+  crw-rw-rw- 1 root root 195,   0 May 24 23:03 /dev/nvidia0
+  crw-rw-rw- 1 root root 195, 255 May 24 23:03 /dev/nvidiactl
+  crw-rw-rw- 1 root root 195, 254 May 24 23:03 /dev/nvidia-modeset
+  crw-rw-rw- 1 root root 507,   0 May 24 23:03 /dev/nvidia-uvm
+  crw-rw-rw- 1 root root 507,   1 May 24 23:03 /dev/nvidia-uvm-tools
+
+  /dev/dri:
+  total 0
+  drwxr-xr-x  3 root root        100 May 24 23:03 .
+  drwxr-xr-x 21 root root       4620 May 24 23:03 ..
+  drwxr-xr-x  2 root root         80 May 24 23:03 by-path
+  crw-rw----  1 root video  226,   0 May 24 23:03 card0
+  crw-rw----  1 root render 226, 128 May 24 23:03 renderD128
+
+  /dev/nvidia-caps:
+  total 0
+  drw-rw-rw-  2 root root     80 May 24 23:03 .
+  drwxr-xr-x 21 root root   4620 May 24 23:03 ..
+  cr--------  1 root root 235, 1 May 24 23:03 nvidia-cap1
+  cr--r--r--  1 root root 235, 2 May 24 23:03 nvidia-cap2
+
+I care about the numbers 195, 507, 226, and possibly 235.
+I'm not quite sure what ``/dev/nvidia-caps`` is for, but I assume if I want to use it inside the container I will need to change its permissions.
+I will ignore it for now.
+
+I'm going to edit my proxmox container configuration before installing the drivers inside the container.
+I'll edit ``/etc/pve/lxc/100.conf``.
+
+.. code-block::
+
+  lxc.cgroup.devices.allow: c 195:* rwm
+  lxc.cgroup.devices.allow: c 507:* rwm
+  lxc.cgroup.devices.allow: c 226:* rwm
+  lxc.mount.entry: /dev/nvidia0 dev/nvidia0 none bind,optional,create=file
+  lxc.mount.entry: /dev/nvidiactl dev/nvidiactl none bind,optional,create=file
+  lxc.mount.entry: /dev/nvidia-uvm dev/nvidia-uvm none bind,optional,create=file
+  lxc.mount.entry: /dev/nvidia-modeset dev/nvidia-modeset none bind,optional,create=file
+  lxc.mount.entry: /dev/nvidia-uvm-tools dev/nvidia-uvm-tools none bind,optional,create=file
+  lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
+
+Before restarting my container, I'll make a quick backup. Should have done that before editing that file, but oh well.
+If I need to immediately restore that backup I'll just have to remember to delete those lines.
+While backing up I get a warning of ``WARNING: Sum of all thin volume sizes (520.00 GiB) exceeds the size of thin pool pve/data and the size of whole volume group (<464.76 GiB).``.
+I believe that's because after creating this backup the maximum space I allow shork (my LXC container) and renderwin (my Windows VM) to take up exceeds the max.
+So later I should probably make sure neither of them can do that by reducing the space on one of their drives.
+During the backup my container is very slow to the point where it seems like it is offline. I probably should have shut it down before making the backup.
+I do a quick SSH into my container and see that my root partition is taking up 97GB. My local storage cannot handle that backup. I need to stop the backup.
+I now realize that the warning I got earlier is because I did not have enough space to back it up. That makes sense.
+I see the graph of my local storage steadily going up. I stop the backup and see my local storage return to a usage of 11.67GB.
+Alright, so that wasn't a quick backup. I'll just restart the container. It'll be fine.
+
+After the reboot I have this output in shork:
+
+.. code-block:: console
+
+  lavender@shork:~$ ls -la /dev/nvidia* /dev/dri
+  crw-rw-rw- 1 nobody nogroup 195, 254 May 25 04:03 /dev/nvidia-modeset
+  crw-rw-rw- 1 nobody nogroup 507,   0 May 25 04:03 /dev/nvidia-uvm
+  crw-rw-rw- 1 nobody nogroup 507,   1 May 25 04:03 /dev/nvidia-uvm-tools
+  crw-rw-rw- 1 nobody nogroup 195,   0 May 25 04:03 /dev/nvidia0
+  crw-rw-rw- 1 nobody nogroup 195, 255 May 25 04:03 /dev/nvidiactl
+
+  /dev/dri:
+  total 0
+  drwxr-xr-x 3 nobody nogroup      100 May 25 04:03 .
+  drwxr-xr-x 7 root   root         600 May 25 04:40 ..
+  drwxr-xr-x 2 nobody nogroup       80 May 25 04:03 by-path
+  crw-rw---- 1 nobody nogroup 226,   0 May 25 04:03 card0
+  crw-rw---- 1 nobody nogroup 226, 128 May 25 04:03 renderD128
+
+Perfect. I now need to install the drivers inside my LXC container.
+Since my LXC container is running Debian 11, which is what my Proxmox VE install is based off of, I'm going to repeat some of the above steps to get it installed and hope the same version gets installed.
+
+.. code-block:: shell
+
+  # Make same changes
+  sudo vi /etc/apt/sources.list
+  sudo apt-get update
+  sudo apt-get install linux-headers-$(uname -r)
+
+Ah that gives me an error. Of course I can't install ``linux-headers-5.15.107-2-pve`` inside of Debian.
+Let's just install ``nvidia-driver`` and hope it works.
+Luckily I think the install figured it out as it had this in its output:
+
+.. code-block::
+
+  Loading new nvidia-current-470.182.03 DKMS files...                                                                                  
+  It is likely that 5.15.107-2-pve belongs to a chroot's host                                                                          
+  Building for 5.10.0-23-amd64                                                                                                         
+  Building initial module for 5.10.0-23-amd64
+
+Now I reboot and hope for the best.
+Success! I get this output:
+
+.. code-block:: console
+
+  lavender@shork:~$ nvidia-smi
+  Thu May 25 04:58:39 2023       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 470.182.03   Driver Version: 470.182.03   CUDA Version: 11.4     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |                               |                      |               MIG M. |
+  |===============================+======================+======================|
+  |   0  NVIDIA GeForce ...  On   | 00000000:0A:00.0 Off |                  N/A |
+  | 25%   36C    P8    13W / 120W |      1MiB /  5941MiB |      0%      Default |
+  |                               |                      |                  N/A |
+  +-------------------------------+----------------------+----------------------+
+                                                                                
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                                  |
+  |  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+  |        ID   ID                                                   Usage      |
+  |=============================================================================|
+  |  No running processes found                                                 |
+  +-----------------------------------------------------------------------------+
+
+Driver version is the same, which is perfect.
+The output of ``apt-cache policy nvidia-driver`` is the same on both the host and inside the container:
+
+.. code-block::
+
+  apt-cache policy nvidia-driver
+  nvidia-driver:
+    Installed: 470.182.03-1
+    Candidate: 470.182.03-1
+    Version table:
+  *** 470.182.03-1 500
+          500 http://ftp.debian.org/debian bullseye/non-free amd64 Packages
+          100 /var/lib/dpkg/status
+
+I'm going to run this command on both the host and the container to stop these from being upgraded:
+
+.. code-block:: shell
+
+  apt-mark hold nvidia-driver
+
+Now I need to make Plex use my graphics card. I'm running Plex in docker, so I just need to expose
+I started following this tutorial: https://tizutech.com/plex-transcoding-with-docker-nvidia-gpu/.
+Everything is basically the same, except it uses the linuxserver image and I use the official image.
+I eventually get linked to here: https://www.pugetsystems.com/labs/hpc/Workstation-Setup-for-Docker-with-the-New-NVIDIA-Container-Toolkit-nvidia-docker2-is-deprecated-1568/.
+I now understand I need to add ``runtime: nvidia`` to my compose file.
+Of course that runtime does not exist. 
+Oh wait, I need to install the NVIDIA Container Toolkit.
+Eventually I find installation instructions: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installation-guide.
+
+.. code-block:: shell
+
+  distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+        && curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+        && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | \
+              sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+              sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  sudo apt-get update
+  sudo apt-get install nvidia-container-toolkit
+  sudo nvidia-ctk runtime configure --runtime=docker
+  sudo systemctl restart docker
+
+I now get this weird error:
+
+.. code-block:: console
+
+  lavender@shork:~/programming/Other/server-config/configs/shork/services/plex$ sudo docker compose up -d
+  [+] Running 0/1
+  _ Container plex  Starting                                                                                                                                                 0.1s 
+  Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running hook #0: error running hook: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+  nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not permitted: unknown
+
+I see that someone had a similar error: https://www.reddit.com/r/Proxmox/comments/s0ud5y/cgroups2_problem_with_nvidiacontainercli/.
+Because of `this comment <https://www.reddit.com/r/Proxmox/comments/s0ud5y/comment/jl4lef2/?utm_source=share&utm_medium=web2x&context=3>` I try setting
+``no-cgroups=true`` inside of ``etc/nvidia-container-runtime/config.toml`` and it worked!
+I also removed the ``runtime: nvidia`` in my docker compose because the example ``docker run`` command in that comment did not include it either.
+Ok, plex is now running.
+Let's do a test... It works! Hardware transcoding at last!
+
 
 
 Things I Learned
@@ -527,3 +884,10 @@ Use Proxmox for everything
 I learned that I will likely be using Proxmox (or some type of Hypervisor) from here on out on all my new installs.
 The fact that it has the potential to pass the GPU through while also keeping other virtualized systems running is awesome.
 I'm sure there will be cases when Proxmox isn't appropriate, but I'll make that decision when I come across a scenario that warrants installing an OS on bare metal.
+
+A similar tutorial/blog post to this is here: https://medium.com/@MARatsimbazafy/journey-to-deep-learning-nvidia-gpu-passthrough-to-lxc-container-97d0bc474957
+
+Things to Check out Later
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* You can password protect the GRUB menu https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Password_protection_of_GRUB_menu

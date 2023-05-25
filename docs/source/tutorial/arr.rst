@@ -10,6 +10,12 @@ TODO
 * Check out integration with :docker-hub:`linuxserver/calibre-web`, :docker-hub:`linuxserver/calibre` and :docker-hub:`linuxserver/lazylibrarian`.
 * Document integration with the ReadEra app.
 
+Radarr/Sonarr
+---------------
+
+This link can be a good starting point: https://trash-guides.info/Radarr.
+Plus, if you eventually want to setup multiple instances of either Radarr or Sonarr, you can follow this part of the guide: https://trash-guides.info/Radarr/Tips/Sync-2-radarr-sonarr/.
+
 
 Readarr
 --------
