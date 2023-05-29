@@ -810,7 +810,7 @@ I'm going to run this command on both the host and the container to stop these f
 
   apt-mark hold nvidia-driver
 
-Now I need to make Plex use my graphics card. I'm running Plex in docker, so I just need to expose
+Now I need to make Plex use my graphics card. I'm running Plex in docker.
 I started following this tutorial: https://tizutech.com/plex-transcoding-with-docker-nvidia-gpu/.
 Everything is basically the same, except it uses the linuxserver image and I use the official image.
 I eventually get linked to here: https://www.pugetsystems.com/labs/hpc/Workstation-Setup-for-Docker-with-the-New-NVIDIA-Container-Toolkit-nvidia-docker2-is-deprecated-1568/.
@@ -842,11 +842,127 @@ I now get this weird error:
   nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not permitted: unknown
 
 I see that someone had a similar error: https://www.reddit.com/r/Proxmox/comments/s0ud5y/cgroups2_problem_with_nvidiacontainercli/.
-Because of `this comment <https://www.reddit.com/r/Proxmox/comments/s0ud5y/comment/jl4lef2/?utm_source=share&utm_medium=web2x&context=3>` I try setting
-``no-cgroups=true`` inside of ``etc/nvidia-container-runtime/config.toml`` and it worked!
+Because of `this comment <https://www.reddit.com/r/Proxmox/comments/s0ud5y/comment/jl4lef2/?utm_source=share&utm_medium=web2x&context=3>`_ I try setting
+``no-cgroups=true`` inside of ``/etc/nvidia-container-runtime/config.toml`` and it worked!
 I also removed the ``runtime: nvidia`` in my docker compose because the example ``docker run`` command in that comment did not include it either.
 Ok, plex is now running.
 Let's do a test... It works! Hardware transcoding at last!
+
+Here's my final output:
+
+.. code-block:: console
+
+  root@bigger-fish:~# nvidia-smi
+  Thu May 25 01:22:55 2023       
+  +-----------------------------------------------------------------------------+
+  | NVIDIA-SMI 470.182.03   Driver Version: 470.182.03   CUDA Version: 11.4     |
+  |-------------------------------+----------------------+----------------------+
+  | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+  |                               |                      |               MIG M. |
+  |===============================+======================+======================|
+  |   0  NVIDIA GeForce ...  On   | 00000000:0A:00.0 Off |                  N/A |
+  | 25%   42C    P2    32W / 120W |    379MiB /  5941MiB |      0%      Default |
+  |                               |                      |                  N/A |
+  +-------------------------------+----------------------+----------------------+
+                                                                                
+  +-----------------------------------------------------------------------------+
+  | Processes:                                                                  |
+  |  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+  |        ID   ID                                                   Usage      |
+  |=============================================================================|
+  |    0   N/A  N/A    107146      C   ...diaserver/Plex Transcoder      375MiB |
+  +-----------------------------------------------------------------------------+
+
+Note that the container cannot see the processes using the GPU. Only the host can.
+
+Passing the GPU to another container for game streaming
+-----------------------------------------------------------
+
+We now have the GPU passed through to shork correctly, but there's also the ability to pass the GPU to another container.
+Perhaps this other container could run a full desktop environment and we could stream Steam games from it.
+The setup I had earlier in my Windows VM was glitchy and that may have been the fault of my configuration,
+or maybe the Intel Arc A380 just didn't want to play nicely with my setup for some reason.
+Before I create a new container I need more space. Luckily I bought 2 Samsung 870 EVO SATA 2.5" drives, both 500GB.
+I did this because I wanted to set both of them up in a RAID
+
+Setting up 2 SSDs as a RAID in Proxmox
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I have my drives mounted on ``/dev/sda`` and ``/dev/sdb`` with their serial numbers ending in ``76X`` and ``08T`` respectively.
+These drives are connected to SATA 0 and SATA 3 on my motherboard (hopefully respectively too).
+Since I only have two disks, I must choose RAID0 or RAID1. Well, I want this to be useful, so I will use RAID1 (mirroring).
+Proxmox recommends lz4 compression, so that's what I'll go with. I'll keep ashift at the default of 12.
+
+Setting up a desktop environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I just set up a new container and I used my RAID storage as the location for its drive.
+I want to install KDE Plasma and access it through VNC.
+To install it, I just ran:
+
+.. code-block:: shell
+
+  sudo apt install task-kde-desktop
+
+Now I'm not sure how to access the desktop. In VMs it was pretty straightforward.
+But now tutorials are recommending that I use x2go, which I'm not even sure can use my GPU (I don't even have my GPU drivers installed in this container anyway).
+A guide that looks to do exaclty what I want is this: https://www.reddit.com/r/Proxmox/comments/oj6ai5/guide_lxc_gpu_accelerated_gaming_desktop_without/.
+I now realize that I once again, have chosen a task that is going to be a pain in the ass to get working.
+
+(to be continued at some point in the future)
+
+Problems Encountered
+--------------------------
+
+VPNs inside Linux Container on Proxmox
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I was using `docker-transmission-openvpn <https://github.com/haugene/docker-transmission-openvpn>`_ inside of my Linux container,
+and it silently broke as all my other services seemed to be working perfectly fine during the migration.
+I get this error:
+
+.. code-block::
+
+  Starting container with revision: 1103172c3288b7de681e2fb7f1378314f17f66cf
+  TRANSMISSION_HOME is currently set to: /config/transmission-home
+  Creating TUN device /dev/net/tun
+  mknod: /dev/net/tun: Operation not permitted
+
+I later find `issue #2398 <https://github.com/haugene/docker-transmission-openvpn/issues/2389>`_ related to using it inside LXC on Proxmox.
+I tried adding the ``mknod=1`` feature to my container with no luck. Another problem with no simple solution.
+
+I'm now trying suggestions from this: https://forum.proxmox.com/threads/turnkey-linux-openvpn-template-issues.31668/#post-157372
+
+.. code-block::
+
+  lavender@shork:~/programming/Other/server-config/configs/shork/services/transmission-openvpn$ sudo mkdir /dev/net
+  lavender@shork:~/programming/Other/server-config/configs/shork/services/transmission-openvpn$ sudo mknod /dev/net/tun c 10 200
+  mknod: /dev/net/tun: Operation not permitted
+
+I got it to work by essentially passing through the ``tun`` device and telling my docker container to not attempt to create or remove the existing device.
+I used the env ``CREATE_TUN_DEVICE=false``. I had to edit my ``100.conf`` with:
+
+.. code-block:: 
+
+  lxc.cgroup.devices.allow: c 10:200 rwm
+  lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+
+I'm not sure if the ``lxc.cgroup.devices.allow`` was necessary, but I got it working so I won't touch it.
+Here's a portion of my docker compose file
+
+.. code-block:: 
+
+  # ...
+    transmission-openvpn:
+      image: haugene/transmission-openvpn
+      cap_add:
+        - NET_ADMIN
+        - MKNOD
+      devices:
+        - /dev/net/tun
+      environment:
+        - CREATE_TUN_DEVICE=false # thanks https://github.com/haugene/docker-transmission-openvpn/issues/2389
 
 
 
