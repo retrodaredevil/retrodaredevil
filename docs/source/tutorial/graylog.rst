@@ -17,7 +17,7 @@ You can name it whatever you would like, but I asked ChatGPT "What type of fish 
 and it told me that archerfish are good at recalling visual characterists of their prey, so I'll make ``archerfish`` my hostname.
 Here's my final options:
 
-.. figure:: ../images/2023-06-06-graylog-proxmox-lxc-container-create-confirm.png
+.. figure:: ../../images/2023-06-06-graylog-proxmox-lxc-container-create-confirm.png
   :width: 500px
 
 Now get into your container and start following the tutorial here: https://go2docs.graylog.org/5-1/downloading_and_installing_graylog/debian_installation.htm

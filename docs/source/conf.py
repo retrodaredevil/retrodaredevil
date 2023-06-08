@@ -43,5 +43,5 @@ extlinks = {
 
 # https://documatt.gitlab.io/sphinx-reredirects/usage.html
 redirects = {
-    "blog/2023-05-building-new-server-running-linux": "blog/tech/2023-05-building-new-server-running-linux.html"
+    "blog/2023-05-building-new-server-running-linux": "tech/2023-05-building-new-server-running-linux.html"
 }

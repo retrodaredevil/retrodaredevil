@@ -318,7 +318,7 @@ I go to Datacenter > bigger-fish > local (biffer-fish) > CT Templates.
 Now I click on Templates and download ``debian-11-standard``.
 I now create a CT (upper right corner).
 
-.. figure:: ../images/2023-05-18-proxmox-lxc-container-step-1.png
+.. figure:: ../../images/2023-05-18-proxmox-lxc-container-step-1.png
   :width: 500px
 
 In the next step, I use the downloaded template as the template.
@@ -327,7 +327,7 @@ For Memory I'm going to choose 24GB (24576 MiB) out of my 32GB. For Swap I choos
 For the network, I'm setting my IPv4 address to be Host IP + 0.0.0.1, so it remains on the same /24 subnet.
 DNS will use host settings.
 
-.. figure:: ../images/2023-05-18-proxmox-lxc-container-step-confirm.png
+.. figure:: ../../images/2023-05-18-proxmox-lxc-container-step-confirm.png
   :width: 500px
 
 Confirm and then remember to start your container!
