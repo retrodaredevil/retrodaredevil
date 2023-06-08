@@ -1,0 +1,30 @@
+June 2023 Bits
+======================
+
+This page contains small entries about random technical stuff I have done throughout June 2023.
+
+June 7 - Upload speed in Proxmox containers and VMs very poor
+-----------------------------------------------------------------
+
+Just struggled through watching a movie over my Plex.
+Tried a speedtest on my older server, which is not running Proxmox.
+Decent upload speed. Tried a speed test in a Windows VM and in an Ubuntu Docker container inside an LXC and got terrible results for the upload speed (3-4Mbps).
+I used the `speedtest cli <https://www.speedtest.net/apps/cli#ubuntu>`_ in Ubuntu and for the Windows VM I just used their website.
+
+Someone had a `similar problem <https://forum.proxmox.com/threads/odd-network-behavior-on-vms-and-cts.54007/>`_.
+Something about this happening specifically on Ubuntu installs.
+There's also some talk of the fact that you should really `use an Intel NIC <https://forum.proxmox.com/threads/upload-speed-issue.54840/>`_,
+but even that isn't a for sure cause of the problem.
+
+The solution? Reboot my Proxmox host? No. Reboot my router. Yeah. That fixed it.
+
+Unrelated but
+^^^^^^^^^^^^^^
+
+Would be cool to install this in my suite of web apps: https://hub.docker.com/r/openspeedtest/latest.
+That is for running a speed test from your browser.
+Another cool app is this: https://registry.hub.docker.com/r/e7db/speedtest/
+which from what I can tell runs a speed test on the server that program is running on.
+
+Would also be cool if I made a speed test based on ``ubuntu:latest`` and installed ``speedtest`` using `speedtest cli <https://www.speedtest.net/apps/cli#ubuntu>`_.
+I could publish it on ghcr.io .

@@ -1,0 +1,72 @@
+May 2023 Bits
+======================
+
+This page contains small entries about random technical stuff I have done throughout May 2023.
+
+Stuff I did on May 28, 2023
+-----------------------------
+
+Just because I could, I wanted to get a few more services running because I had them on my list to try out.
+I got `Stirling PDF <https://github.com/Frooodle/Stirling-PDF/>`_ up and running. It should allow me to mess with PDF files more easily now.
+I got `Trashcan <https://gitlab.com/mildlyparallel/trashcan>`_ up and running. It's a nice way to store PDF files that have a DOI associated with them.
+I plan to use this the next time I need to manage a bunch of sources for a paper I'm writing.
+I also got `Folding At Home <https://stats.foldingathome.org/>`_ up and running using its `docker image <https://docs.linuxserver.io/images/docker-foldingathome>`_.
+Getting it to use my GPU was fairly simple. It seemed to detect it right away. It definitely helped that I had already setup the nvidia runtime for Plex.
+When I let Folding At Home use my GPU, my GPU power usage sits around 100W and its temperature is 70C-80C.
+This won't be something I run forever, but it's fun for the time being. Maybe I'll see how it affects a Plex transcode.
+Also, link to `my folding at home stats <https://stats.foldingathome.org/donor/name/retrodaredevil>`_.
+
+AdGuard Home on Proxmox (May 30, 2023)
+----------------------------------------
+
+Since I recently got Proxmox VE up and running, I wanted to move my adblocker off my Raspberry Pi Zero.
+I hadn't moved it to Docker on my previous server (parker) because I knew if I did that I would need port 53 on my server working.
+With Proxmox, I can put Pihole or AdGuard Home.
+I was going to setup Pihole again, but after looking at the feature comparison between Pihole and AdGuard Home, I decided AdGuard Home would be a better fit.
+The feature that really decided this for me was built in DNS over HTTPS/TLS support.
+If you want to do that in Pihole, you need to install cloudflared and manually create a service to get it running.
+I really don't like the idea of doing that, and AdGuard Home just seems to be more polished in that sense.
+
+I would create the LXC myself and start to either set up Docker or install AdGuard Home through another means,
+but I came across `Proxmox helper scripts <https://tteck.github.io/Proxmox/>`_.
+That page has a section about "AdGuard Home LXC".
+To get this working all I have to do is copy-paste the command into my Proxmox VE root shell.
+That's a big security concern, but whatever. It seems trustworthy. A bunch of people use these scripts (4.5k stars on GitHub).
+The installation tells me that I should not use SSH because something about incorrect variables, so I'll go and do this in the browser.
+The installation is actually really slick. I'm seriously impressed by how polished it is.
+After going through the setup I'm renaming the hostname to "betta" (pronounced beh-tuh), which ChatGPT
+seems to think is a fish that could guard a small area.
+(I need to stay consistent and name my Proxmox stuff after marine life since I'm doing that for some reason).
+
+After giving betta a static IP in my router and setting it as my DNS server, it started getting requests.
+I wanted to make sure that its settings were configured so that its upstream DNS server was using DNS over HTTPS (DoH).
+It turns out it's configured by default to do that. Awesome! 
+I looked at the `Known providers <https://adguard-dns.io/kb/general/dns-providers/>`_ and saw that ``https://dns10.quad9.net/dns-query`` does not do any censoring,
+which is good because I wanted to configure adblocking myself. I'll also go ahead and add Cloudflare's provider: ``https://dns.cloudflare.com/dns-query``.
+
+I did a test using `what is my dns server <https://www.top10vpn.com/tools/what-is-my-dns-server/>`_ on my computer and see that my computer may not be using Adguard Home as its DNS server.
+``nmcli device show wlo1 | grep IP4.DNS`` seems to correctly point at betta and my router's IP.
+After a bit I tried again and it tells me my DNS server is Cloudflare, which is good.
+
+Thinking about a Grafana Dashboard
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Eventually I want to create a Grafana dashboard with statistics from as much of my services as possible.
+It looks like there is `adguard-exporter <https://github.com/ebrianne/adguard-exporter>`_ for getting data from AdGuard.
+Downside to that is that it looks like you will have to put your AdGuard Home password inside an environment variable.
+Luckily I can create a docker secret when it comes to that and use the env configuration of ``password_from_file=true``.
+
+Authelia Alongside Caddy (May 30, 2023)
+-------------------------------------------
+
+Earlier today I was messing with Authentik because I wanted to set it up to require authentication for some of my services
+that needed to be password protected.
+I had been using Caddy's basic auth feature up until this point,
+but it was annoying to have to type in my basic auth credentials for each service I wanted to access.
+I got Authentik to run and I got its page to come up, but there were a bunch of errors in my browser's console window.
+I probably hadn't set it up correctly with Caddy and I probably needed to set an environment variable to allow it to be accessed over HTTPS through Caddy,
+but I did not feel like figuring it out. It seemed too complicated for what I was trying to do.
+
+During my research I found Authelia to be a much simpler alternative to Authentik.
+Plus, it has `support for many proxies <https://www.authelia.com/overview/prologue/supported-proxies/>`_ including Caddy.
+The only downside is that it isn't really a SSO solution, but a layer of protection over services that don't have protection.
