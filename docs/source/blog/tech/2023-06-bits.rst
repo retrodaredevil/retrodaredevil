@@ -28,3 +28,4 @@ which from what I can tell runs a speed test on the server that program is runni
 
 Would also be cool if I made a speed test based on ``ubuntu:latest`` and installed ``speedtest`` using `speedtest cli <https://www.speedtest.net/apps/cli#ubuntu>`_.
 I could publish it on ghcr.io .
+

@@ -175,7 +175,7 @@ The files on my hard drive are owned by a user:group I have commonly named media
 The `documentation on "Bind Mount Points" <https://pve.proxmox.com/wiki/Linux_Container#_bind_mount_points>`_ 
 seems to suggest that I can mount the hard drive on the host machine and then access it in my LXC container.
 As I thought, "With unprivileged containers you might run into permission problems caused by the user mapping".
-By default, ownership inside inside the guest is mapped to this: (from `this tutorial <https://itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/>`_)
+By default, ownership inside inside the guest is mapped to this: (from `this tutorial for binding unprivileged <https://itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/>`_)
 
 .. code-block::
 
@@ -275,12 +275,12 @@ Now that Proxmox is setup and we have access to the web interface... I'm going t
   apt-get update
   apt-get dist-upgrade
 
-I also found the second half of `this video <https://www.youtube.com/watch?v=7OVaWaqO2aU>`_ useful for being shown around the Proxmox web UI.
+I also found the second half of `Proxmox VE Install and Setup Tutorial <https://www.youtube.com/watch?v=7OVaWaqO2aU>`_ useful for being shown around the Proxmox web UI.
 
 Techno Tim's "Before I do anything on Proxmox, I do this first...
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-I'm gonna start this video `here <https://www.youtube.com/watch?v=GoZaMgEgrHw&list=PL8cwSAAaP9W37Vnxkw6__sshVY-XohWNm&index=1&t=190s>`_.
+I'm gonna start this video `Before I do anything on Proxmox, I do this first <https://www.youtube.com/watch?v=GoZaMgEgrHw&list=PL8cwSAAaP9W37Vnxkw6__sshVY-XohWNm&index=1&t=190s>`_.
 It first talks about configuring ZFS storage. I don't seem to have a way to configure storage because I told proxmox to 
 
 Now we want to configure storage, which is shown .
@@ -308,7 +308,7 @@ Now I save, run ``update-grub``. Now I can edit ``/etc/modules`` and add these l
   vfio_virqfd
 
 Now I can reboot. I don't need Proxmox to be VLAN aware yet, but I might use TrueNAS to create NFS storage in the future like he does.
-For my Windows VM I'll get to eventually, I will have to have the VirtIO ISO available, which is shown `here <https://www.youtube.com/watch?v=GoZaMgEgrHw&list=PL8cwSAAaP9W37Vnxkw6__sshVY-XohWNm&index=1&t=673s>`_.
+For my Windows VM I'll get to eventually, I will have to have the VirtIO ISO available, which is shown on `Before I do anything on Proxmox, I do this first... <https://www.youtube.com/watch?v=GoZaMgEgrHw&list=PL8cwSAAaP9W37Vnxkw6__sshVY-XohWNm&index=1&t=673s>`_.
 
 Create a Linux Container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -367,12 +367,12 @@ Creating a Windows 10 VM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It's finally time to create a Windows VM with everything else setup.
-I'm going to be using `this video <https://www.youtube.com/watch?v=6c-6xBkD2J4>`_ to help myself out.
+I'm going to be using `Virtualize Windows 10 with Proxmox VE <https://www.youtube.com/watch?v=6c-6xBkD2J4>`_ to help myself out.
 
-Download a Windows 10 ISO `here <https://www.microsoft.com/en-us/software-download/windows10ISO>`_.
+Download a Windows 10 ISO on `Microsoft's Windows 10 Download page <https://www.microsoft.com/en-us/software-download/windows10ISO>`_.
 Now go to Proxmox. Navigate to DAtacenter > bigger-fish > local (bigger-fish) > ISO Images.
 Then click upload. Alternatively, you can copy your download link and then do "Download from URL" instead (this might be faster than downloading to your computer then uploading).
-Now go `here <https://github.com/virtio-win/virtio-win-pkg-scripts/blob/master/README.md>`_ to download the "Stable virtio-win ISO".
+Now go to `virtio iso download <https://github.com/virtio-win/virtio-win-pkg-scripts/blob/master/README.md>`_ to download the "Stable virtio-win ISO".
 Upload it (or do download from URL).
 
 Now, create a VM and select the Windows 10 ISO. Set the settings as you would expect.
@@ -399,7 +399,7 @@ I recommend shutting this VM down and converting it to a template. Now you can c
 Passing the GPU through
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-I'm following `this tutorial <https://techno-tim.github.io/posts/gpu-passthrough/>`_.
+I'm following `TechnoTim GPU Passthrough <https://techno-tim.github.io/posts/gpu-passthrough/>`_.
 I didn't do all of the recommended changes to ``/etc/default/grub``. Instead I just left the settings I changed above as they were.
 I had already done most of the necessary configuration.
 Before changing more settings, we need to `install tightvnc <https://www.tightvnc.com/download.html>`_.
@@ -483,7 +483,7 @@ It seems Intel Graphics was automatically installed and it detects my graphics c
 I install steam, stream Portal 2. Performance is OK. Main complaint is latency.
 I run passmark and the 3D benchmarks are terrible. I think I a score of 3528. A 2D score of 340.
 For fun, my CPU's score in the VM is 21615. At least that is decent I guess.
-Maybe I should try `this tutorial <https://blog.hadenes.io/post/convert-a-proxmox-windows-guest-from-bios-to-uefi/>`_ to see if I can get UEFI mode.
+Maybe I should try `proxmox windows VM guest from bios to uefi <https://blog.hadenes.io/post/convert-a-proxmox-windows-guest-from-bios-to-uefi/>`_ to see if I can get UEFI mode.
 I have no doubt that there's something I can do to increase the performance of the GPU.
 
 Thoughts on the setup so far

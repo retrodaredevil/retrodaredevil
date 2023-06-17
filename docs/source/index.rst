@@ -28,6 +28,7 @@ Contents
   tutorial/ssh
   tutorial/wii-mod
   tutorial/react
+  tutorial/graylog
 
 .. toctree::
   :maxdepth: 2
@@ -35,6 +36,7 @@ Contents
 
   blog/tech/2023-05-building-new-server-running-linux
   blog/tech/2023-05-bits
+  blog/tech/2023-06-wireguard-setup
   blog/tech/2023-06-bits
 
 .. toctree::
@@ -59,8 +61,8 @@ Contents
 
   tutorial/simutrans
   tutorial/arr
-  tutorial/qemu
   tutorial/steam
+  tutorial/calibre
 
 
 TODO

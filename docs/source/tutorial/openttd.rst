@@ -23,14 +23,14 @@ When creating the save file, I recommend changing some of the defaults. Some of 
 
 Settings (some of these can be changed in ``openttd.cfg`` later)
   
-* When paused allow: "all actions" (``construction.command_pause_level 3``) `link <https://wiki.openttd.org/en/Archive/Manual/Settings/Build%20in%20pause>`_
+* When paused allow: "all actions" (``construction.command_pause_level 3``) `build in pause <https://wiki.openttd.org/en/Archive/Manual/Settings/Build%20in%20pause>`_
   * Note: This setting does not affect network games, but I'm leaving it here for completeness
 * Airports never expire: on (``station.never_expire_airports false``)
   * Cannot be changed on the server, must be set in save file
-* Vehicles never expire: on (``vehicle.never_expire_vehicles false`` `link <https://wiki.openttd.org/en/Archive/Manual/Settings/Never%20expire%20vehicles>`_)
+* Vehicles never expire: on (``vehicle.never_expire_vehicles false`` `never expire vehicles <https://wiki.openttd.org/en/Archive/Manual/Settings/Never%20expire%20vehicles>`_)
   * Cannot be changed on the server, must be set in save file
-* Vehicle breakdowns: none (``difficulty.vehicle_breakdowns 0``) `link <https://wiki.openttd.org/en/Archive/Manual/Settings/Vehicle%20breakdowns>`_
-* Number of plane crashes: reduced (``vehicle.plane_crashes 0``) `link <https://wiki.openttd.org/en/Archive/Manual/Settings/Plane%20crashes>`_
+* Vehicle breakdowns: none (``difficulty.vehicle_breakdowns 0``) `vehicle breakdown <https://wiki.openttd.org/en/Archive/Manual/Settings/Vehicle%20breakdowns>`_
+* Number of plane crashes: reduced (``vehicle.plane_crashes 0``) `plane crashes <https://wiki.openttd.org/en/Archive/Manual/Settings/Plane%20crashes>`_
 * Environment > Authorities
 
   * Town council's attitude towards area restructuring: Permissive (``difficulty.town_council_tolerance 0``) `link <https://wiki.openttd.org/en/Archive/Manual/Settings/Town%20council%20tolerance>`_
