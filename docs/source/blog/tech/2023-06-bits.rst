@@ -29,3 +29,61 @@ which from what I can tell runs a speed test on the server that program is runni
 Would also be cool if I made a speed test based on ``ubuntu:latest`` and installed ``speedtest`` using `speedtest cli <https://www.speedtest.net/apps/cli#ubuntu>`_.
 I could publish it on ghcr.io .
 
+June 17 - Installing Mosh
+--------------------------
+
+I just wrote about getting my WireGuard setup: :ref:`wireguard_setup`.
+Now that I have access to my local network, it makes sense to install mosh.
+I could run a simple ``apt install mosh``, but I'm running Debian 11 at the moment, which won't result in the latest mosh server.  
+``apt-get -s install mosh`` shows the version that would be installed is 1.3.2 - the actual latest is `1.4.0 <https://github.com/mobile-shell/mosh/releases/tag/mosh-1.4.0>`_.
+The `comparison between 1.3.2 and 1.4.0 <https://github.com/mobile-shell/mosh/compare/mosh-1.3.2...mosh-1.4.0>`_ shows quite a lot of changes.
+Luckily mosh can be installed with brew.
+
+To install brew on Debian, just go to https://brew.sh/ to get the install command.
+Now I can run ``brew install mosh``.
+Now I have the ``mosh`` and ``mosh-server`` binaries installed.
+When I run ``mosh`` on my local machine, I do have to customize how I call it so it starts with:
+``mosh --server /home/linuxbrew/.linuxbrew/bin/mosh-server``.
+
+The only downside of mosh is that it does not have full OSC 52 support (support for copy-pasting).
+Looks like if `issue 1104 <https://github.com/mobile-shell/mosh/pull/1104>`_ would get merged it would be better.
+
+June 18 - linuxserver.io docker images to try out
+---------------------------------------------------
+
+Today I went through https://docs.linuxserver.io/ to see all the images they provide.
+I found these that I want to install and check out:
+
+* https://docs.linuxserver.io/images/docker-emulatorjs
+  
+  * Sounds like a perfect way to expose my collection of ROMs to myself for easy playing in a web browser
+  
+* https://docs.linuxserver.io/images/docker-duckdns
+
+  * This can update my duckdns IP address automatically. I currently am using a cronjob, but I think it makes more sense to put this in a docker container so I can commit the compose file to my server config repository.
+
+* https://docs.linuxserver.io/images/docker-code-server
+  
+  * Seems like a perfect thing to run for a text/code editor on the go.
+  * Could also look at this: https://docs.linuxserver.io/images/docker-openvscode-server
+
+* https://docs.linuxserver.io/images/docker-nextcloud
+
+  * I had this setup a while back and really need to get back into it. It's such a useful piece of technology and with my upgraded server I'm confident it could run without taking up many resources.
+
+* https://docs.linuxserver.io/images/docker-prowlarr
+
+  * I really need to move away from jackett. Prowlarr could really improve my tracker experience.
+
+* https://docs.linuxserver.io/images/docker-boinc
+
+  * Seems like an alternatively to foldingathome. Would be cool to try out.
+
+June 18 - Looking into Lemmy
+--------------------------------
+
+With the Reddit blackout still in effect on many subreddits, I have decided to look into Lemmy.
+I'm trying to be a part of the protest by not browsing Reddit even though some subreddits I follow are back up.
+I was looking at some instances here: https://join-lemmy.org/instances.
+I created accounts for `lemm.ee <https://lemm.ee/>`_, `programming.dev <https://programming.dev>`_, `lemmy.world <https://lemmy.world/>`_ and `lemmy.blajah.zone <https://lemmy.blahaj.zone>`_.
+I'm now giving `Jerboa for Lemmy <https://github.com/dessalines/jerboa>`_ a shot.

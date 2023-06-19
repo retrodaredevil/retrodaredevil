@@ -1,5 +1,7 @@
-Wireguard setup
-====================
+.. _wireguard_setup:
+
+Wireguard setup (June 2023)
+============================
 
 June 12 - My SSH Tunnel VPN Thing Broke
 ------------------------------------------
@@ -158,3 +160,27 @@ The fact that so many people had problems with Docker on LXC on Proxmox makes me
 just to do stuff like this. I mean, I can still have my LXC, but maybe some things would just run better inside Docker on a VM.
 
 This was a good experience I learned a lot of stuff, but it was frustrating to not really solve my problems with the linuxserver image on Docker on LXC on Proxmox.
+
+Continuing
+-------------
+
+I am currently able to connect on my phone.
+I found that changing allowed IPs on my phone to ``10.6.0.0/32, 192.168.3.0/24`` made it so only requests to the local network went through the VPN.
+This means that I can keep my VPN on all the time on my phone and access my local network.
+Now I just have to do this on my laptop.
+
+.. note:: 
+
+  I believe there is configuration I could do on the server to make the generated configurations only route local network packets by default,
+  but that's easy enough to configure myself.
+
+I had luck getting the linuxserver docker image to be used as a client, but I don't know how to get my host machine to use it.
+Let's try the bare metal install again.
+Last time my problem was resolvconf messing up DNS stuff.
+I found `this SO link <https://superuser.com/questions/1500691/usr-bin-wg-quick-line-31-resolvconf-command-not-found-wireguard-debian>`_
+which recommended I instead install ``openresolv``, and now ``which resolvconf`` works and my DNS seems to also work!
+Now we're back to editing ``/etc/wireguard/wg0.conf`` on my laptop.
+I'll quickly get the conf file from my wireguard LXC.
+I'll change ``AllowedIPs`` to ``10.6.0.0/32, 192.168.3.0/24`` again.
+Now I can run ``wg-quick up wg0``. Now I can run ``sudo wg`` to confirm it's working. And it is!
+I now have a consistent connection to my server's local network!

@@ -56,7 +56,9 @@ It looks like there is `adguard-exporter <https://github.com/ebrianne/adguard-ex
 Downside to that is that it looks like you will have to put your AdGuard Home password inside an environment variable.
 Luckily I can create a docker secret when it comes to that and use the env configuration of ``password_from_file=true``.
 
-Authelia Alongside Caddy (May 30, 2023)
+.. _authelia_research:
+
+Authelia Alongside Caddy (May 30)
 -------------------------------------------
 
 Earlier today I was messing with Authentik because I wanted to set it up to require authentication for some of my services
