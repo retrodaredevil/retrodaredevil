@@ -87,3 +87,37 @@ I'm trying to be a part of the protest by not browsing Reddit even though some s
 I was looking at some instances here: https://join-lemmy.org/instances.
 I created accounts for `lemm.ee <https://lemm.ee/>`_, `programming.dev <https://programming.dev>`_, `lemmy.world <https://lemmy.world/>`_ and `lemmy.blajah.zone <https://lemmy.blahaj.zone>`_.
 I'm now giving `Jerboa for Lemmy <https://github.com/dessalines/jerboa>`_ a shot.
+
+June 18 - Thinking about SolarThing Data Retention
+----------------------------------------------------
+
+A while back at Wild Mountain Farms, we had been running CouchDB and InfluxDB.
+I eventually got rid of InfluxDB because it was another database to maintain and I wanted CouchDB to be the source of truth.
+The solution for data retention in CouchDB was and still is this:
+update the database with new data frequently, but usually replace old data so that you only keep ~60 packets per hour.
+When we used InfluxDB, I had tried setting up differenet retention policies so that some packets would be kept forever and
+some would be deleted after a short period of time.
+I don't believe either of those solutions is ideal.
+I ran into InfluxDB's `documentation on downsampling <https://docs.influxdata.com/influxdb/v1.7/guides/downsampling_and_retention/>`_ or `the 2.7 downsample docs <https://docs.influxdata.com/influxdb/v2.7/process-data/common-tasks/downsample-data/>`_,
+InfluxDB's approach to this is interesting.
+It basically seems to be aggregating data and keeping the aggregated data for much longer.
+
+I want to eventually improve SolarThing's retention, but I would really like to do it in a way
+that doesn't require weird calculations on the client side.
+I remember the logic for the InfluxDB 1.X retention policies was so weird that when I had to create another handler for InfluxDB 2.0, I didn't even port that logic over.
+I would also like to do this in a way that doesn't require "nightly jobs" to remove data from the database.
+I think realistically, we can't do some nice aggregation thing that InfluxDB does with the high resolution data,
+but we should at least be able to keep 1 packet per second for a couple of hours.
+It would make for some nice graphs and would allow for for accurate smoothing of graphs. High resolution data makes a lot of sense, especially for the past couple of days.
+
+June 20 - Wireguard Connection on my laptop stopped working
+-------------------------------------------------------------
+
+I just opened up my laptop and tried connecting to services on my local network, but I couldn't access them.
+So, Wireguard must be down. Turns out, nope! Running just fine, but it seems my public IP address had changed,
+so it hadn't updated to use the new IP my duckdns was pointing at.
+Looks like someone `on Reddit had the same problem <https://www.reddit.com/r/WireGuard/comments/knqtiq/ddns_ip_change_breaks_wireguard_connection_how_to/>`_.
+A simple ``sudo wg-quick down wg0`` and a ``sudo wg-quick up wg0`` fixed the problem.
+I have my router restart on Monday mornings, and I didn't notice this yesterday since I wasn't on my computer then.
+
+I think there's a way to automate this fix, but that's something for another time.
