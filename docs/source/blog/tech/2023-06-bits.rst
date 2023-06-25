@@ -121,3 +121,19 @@ A simple ``sudo wg-quick down wg0`` and a ``sudo wg-quick up wg0`` fixed the pro
 I have my router restart on Monday mornings, and I didn't notice this yesterday since I wasn't on my computer then.
 
 I think there's a way to automate this fix, but that's something for another time.
+
+June 24 - Outback MATE 2 Configuring Generator Settings for FX
+---------------------------------------------------------------
+
+At Wild Mountain Farms we have an Outback MATE 2 with 2 FXs and 2 MXs.
+The FXs can charge the batteries when a generator is running.
+SolarThing is setup to send a DROP command before sending an AUX OFF command,
+so that switching over to battery power should have minimal impact on electronics.
+However, unless the FXs are completely done will their absorb charge, the DROP command is not accepted.
+
+We figured that even if the DROP command is not accepted, 
+we could alter some configuration that would still make our networking equipment happy with the "dirty" power transfer.
+On the MATE we navigated to ADV/FX/GEN.
+We saw a couple of settings that we might want to alter.
+The lower limit was set to 108 vac.
+The transfer delay was set to 60 cycles.

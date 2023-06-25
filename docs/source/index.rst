@@ -38,6 +38,7 @@ Contents
   blog/tech/2023-05-bits
   blog/tech/2023-06-wireguard-setup
   blog/tech/2023-06-auth-with-caddy
+  blog/tech/2023-06-can-bus-rpi
   blog/tech/2023-06-bits
 
 .. toctree::
