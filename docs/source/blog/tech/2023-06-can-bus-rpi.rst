@@ -24,7 +24,7 @@ The adapter I got is the `USB CAN Converter Module for Raspberry Pi <https://www
 The description of the item mentions Socket-CAN, so I need to figure out what that means driver wise.
 When I eventually go to connect it, this is the pin out:
 
-.. figure:: ../../images/usb_can_converter_module_pin_out.jpg
+.. figure:: ../../images/2023-06-24-usb-can-converter-module-pin-out.jpg
   :width: 500px
 
 I have my device plugged in so I need to figure out how to access it.
@@ -156,3 +156,36 @@ Now I uncomment the ``bus.send`` line and get this:
 
 Even when I set ``receive_own_messages=False`` I still get weird data.
 
+Picking out a Java CAN Bus Library
+------------------------------------
+
+``python-can`` is a nice gem of a library. Great documentation. Up to date.
+Finding something similar for Java proves to be difficult.
+Here are a few I found
+
+* `dschanoeh/Kayak <https://github.com/dschanoeh/Kayak>`_
+
+  * Archived in 2020.
+  * A CAN bus analysis tool, with a ``Kayak-core`` module that looks promising.
+  * Includes a `nice example <https://github.com/dschanoeh/Kayak-core-test/blob/master/src/main/java/com/github/kayakcoretest/EchoService.java>`_.
+
+* `entropia/libsocket-can-java <https://github.com/entropia/libsocket-can-java>`_
+
+  * Archived in 2020. Last commit in 2014.
+
+* `jazdw/jnaCan <https://github.com/jazdw/jnaCan>`_
+
+  * Archived in 2022. Last commit in 2015.
+  * Uses lombok. Many things are mutable, but looks like a decent OOP approach to this.
+
+* `How to use SocketCAN via Unix Domain Sockets in Java? <https://stackoverflow.com/questions/76471002/how-to-use-socketcan-via-unix-domain-sockets-in-java>`_
+
+  * Unanswered StackOverflow question
+
+* `Linux Docs for SocketCAN <https://docs.kernel.org/networking/can.html>`_
+
+  * Unrelated to Java, but may help
+
+* `The Java CAN API-a Java gateway to field bus communication <https://doi.org/10.1109/WFCS.2000.882531>`_
+
+  * A paper on CAN communication using Java. Very old article. Likely not relevant anymore
