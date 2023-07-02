@@ -148,3 +148,17 @@ I will now change the "transfer delay" to 20 cycles. We won't be testing this to
 so hopefully it is fine the next time we run the generator.
 
 Update (June 26): it worked!
+
+June 29 - Unifi Access Point Stopped Working
+------------------------------------------------
+
+Back on June 25 we mounted one of our UAP-AC-M properly. We ran an ethernet cable to BatteryPi in the battery room.
+We assumed that it would work fine and essentially would just be like extending the wired network.
+This worked fine for a few days until today when the AP was failing to adopt.
+I tried factory resetting it. It worked for a bit, but since I had plugged the RPi back in after re-adopting it,
+the AP wasn't happy for long.
+
+We researched the problem and came across `this unifi thread <https://community.ui.com/questions/UAP-AC-M-with-Switch-to-allow-wired-connections/885bdd01-d4d8-4f4d-bdd2-0125d161a3e4>`_.
+We unplugged the Pi's wired connection and the AP soon became happy again.
+There don't really seem to be solutions for this online other than that this setup isn't officially supported by Unifi.
+
