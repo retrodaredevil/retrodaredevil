@@ -1,0 +1,35 @@
+July 2023 Bits
+================
+
+July 8 - Installing Home Assistant OS in a VM
+-----------------------------------------------
+
+I think it's finally time to go back into some of my own homelab projects.
+`Proxmox VE Helper Scripts <https://tteck.github.io/Proxmox/>`_ has like 4 different scripts for installing HA in some way.
+Some ways use Linux Containers that just install Home Assistant in Docker. 
+One way installs Home Assistant core in a Linux Container, but warns about being tightly coupled to the underlying system.
+The way I'm going to go with is just installing HA in a VM.
+I don't have any production VMs at the moment, so I'm excited to see how this turns out.
+I'm also excited that I'm using the official disk image provided by HA.
+I asked ChatGPT to give me an aquatic animal that performs repetitive tasks and it gave me an octopus.
+That will not be the name of this container.
+
+I tried getting Caddy to serve home assistant using its reverse proxy directive, but I get a 400 bad request.
+Not sure what's up with that. Maybe I'll figure it out one day.
+
+July 8 - Gitea setup
+----------------------
+
+I was looking at `comparisons <https://docs.gitea.com/next/installation/comparison>`_ today to decide if I wanted to run Gitea or GitLab,
+and I think Gitea will be a good fit for me, especially because it supports the same format as GitHub Actions.
+Gitea has a nice `install with docker <https://docs.gitea.com/next/installation/install-with-docker>`_ page.
+
+I got it installed and I need to do some additional config.
+I was going to try to `disable registration <https://docs.gitea.com/next/administration/config-cheat-sheet#service-service>`_
+with ``GITEA__service__DISABLE_REGISTRATION=true``, but I found that only works if you have that set upon the first startup of the container.
+So I made it so ``/data/gitea/conf`` is fully configurable by me and version controlled and I edited ``app.ini`` from there.
+
+I want to mirror the solarthing repository here as a test, so I just started to create a new repo, chose "New Migration", GitHub,
+added my API key, and mirrored everything there is to mirror.
+
+I also went to my account settings and added some email addresses including retrodaredevil@users.noreply.github.com.

@@ -156,6 +156,19 @@ Now I uncomment the ``bus.send`` line and get this:
 
 Even when I set ``receive_own_messages=False`` I still get weird data.
 
+
+July 8 - Update
+-----------------
+
+I finally stopped procrastinating wiring up the CAN USB adapter to the generator's CAN high and CAN low on July 4.
+It didn't work. I didn't get any data after doing this and nothing seemed to change.
+I tried a bunch of bitrates, but none worked. I don't even know what bitrate I am supposed to be using in the first place.
+I will likely give up for now. Maybe I'll try a beaglebone that has built in CAN support to know that it's not the USB adapter,
+or maybe I'll hook the adapter to a car's CAN bus to see if it was something on the DSE3110's side that was causing issues.
+
+This is pretty frustrating because no one has done this before and DSE is not helpful in providing documentation on how to
+communicate with this CAN network.
+
 Picking out a Java CAN Bus Library
 ------------------------------------
 
