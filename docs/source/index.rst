@@ -40,6 +40,8 @@ Contents
   blog/tech/2023-06-auth-with-caddy
   blog/tech/2023-06-can-bus-rpi
   blog/tech/2023-06-bits
+  blog/tech/2023-07-nasplex-to-proxmox
+  blog/tech/2023-07-bits
 
 .. toctree::
   :maxdepth: 2
