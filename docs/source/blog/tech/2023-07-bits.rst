@@ -82,3 +82,47 @@ However, if I try to send from Thunderbird I get a different error:
   Rejected (anti-spoofing: DMARC compliance is enforced for local domains, regardless of the policy setting). Please check the message and try again.
 
 I think solving that will be for another time. I'm just glad to have the web interface working as intended.
+
+July 31 - Running DietPi in Proxmox
+--------------------------------------
+
+I want to get familiar with DietPi without installing on a Pi, so I figured I'd install it in Proxmox.
+The download (here: https://dietpi.com/downloads/images/DietPi_RPi-ARMv8-Bookworm.7z ) gives a ``.qcow2`` file after being unzipped.
+I could not figure out how to import this in the web interface, so I found a tutorial to follow: https://ostechnix.com/import-qcow2-into-proxmox/
+
+.. code-block:: shell
+
+  # On Proxmox
+  mkdir /var/lib/vz/template/qcow
+
+  # On my machine
+  scp Downloads/Images/DietPi_Proxmox-x86_64-Bookworm.qcow2 bigger-fish:/var/lib/vz/template/qcow
+
+Now I have this output:
+
+.. code-block:: console
+
+  root@bigger-fish:~# ls -lA /var/lib/vz/template/qcow
+  total 247092
+  -rw-r--r-- 1 root root 253019136 Jul 30 20:07 DietPi_Proxmox-x86_64-Bookworm.qcow2
+
+Now I create a VM without an OS, like the tutorial says.
+For the "OS" tab of my "Create: Virtual Machine", I choose "Do not use any media".
+The tutorial recommends I make my disk format "QEMU image format", but I cannot because both local-lvm and dolphin are LVM storage, and not file systems.
+
+I found `another tutorial <https://pve.proxmox.com/pve-docs/chapter-qm.html#_importing_virtual_machines_and_disk_images>`_ that recommends something like ``qm importovf 999 WinDev1709Eval.ovf local-lvm``.
+That doesn't work because I don't have it in a ovf format.
+`This tutorial <https://kb.vander.host/operating-systems/how-to-import-a-qcow2-file-to-proxmox/>`_ recommends I run
+``qm importdisk 106 harddisk.qcow2 local-lvm``.
+I will run ``qm importdisk 109 /var/lib/vz/template/qcow/DietPi_Proxmox-x86_64-Bookworm.qcow2 dolphin`` after I create a blank VM with ID 109.
+I created a pretty basic VM with limited resources, and runing the command gives ``Successfully imported disk as 'unused0:dolphin:vm-109-disk-1'``.
+If I look at the "Hardware" tab in the web UI, the disk shows up. Finally, some progress!
+The tutorial also recommends I run ``qm set 109 --scsi0 dolphin:vm-109-disk-1``.
+Now the disk I just added is the default! I can delete the disk-0 that it created automatically earlier.
+
+I boot up DietPi, login with root/dietpi, and it works! Looks like it's running a bunch of updates.
+I opt out of data collection and choose "Generic 104-key PC" keyboard with "English (US)".
+I change the software password and the root password.
+I choose a minimal install by keeping the defaults.
+Now I can SSH into the machine.
+What will I do with my DietPi install? I don't know yet, but I'm glad I know how to set it up now.
