@@ -1,0 +1,43 @@
+August 2023 Bits
+================
+
+
+August 3 - Grafana 10 and the Infinity Datasource
+---------------------------------------------------
+
+Yesterday I installed Grafana 10 on my own server, hoping to understand it better before upgrading
+the Wild Mountain Farms Grafana to that.
+`Fifeman GraphQL Datasource <https://github.com/fifemon/graphql-datasource>`_ has served me well, but it's not maintained anymore.
+I came across the `Infinity Datasource <https://sriramajeyam.com/grafana-infinity-datasource/>`_ recently, and it seems to do everything I need and more.
+And even better, `it's maintained <https://github.com/yesoreyeram/grafana-infinity-datasource>`_ (last commit 10 hours ago as I write this)!
+I got it up and working like so:
+
+.. figure:: /images/2023-08-03-grafana-infinity-solarthing-graphql.png
+  :width: 100%
+
+Now I just have to figure how to use Grafana's Group By feature, since (unlike GraphQL Datasource), Infinity does not support Group By natively.
+
+(Update August 4). Alright so I played with it a bit... and... yeah I can't seem to figure out how the fuck it's supposed to work.
+But luckily, the plugin itself supports `UQL (Unstructured Query Language) <https://github.com/yesoreyeram/uql>`_,
+which is a project that is way too cool looking to only have 5 stars (okay 6 now that I starred it).
+It even has some `great docs <https://sriramajeyam.com/grafana-infinity-datasource/wiki/uql/>`_ (on the Infinity's plugin docs).
+It's made by the same person!
+Alright, it seems really cool, but I don't think it can convince Grafana to make it into separate series.
+Maybe there's something I'm missing.
+Changing the parser to "Backend" is interesting, but I can't seem to get its summarize/summarize by to work
+(And I don't really know how to use them).
+There's also the `GROQ <https://www.sanity.io/docs/groq>`_ option, but I suspect that I'll run into the same problem,
+It has a nice `cheat sheet <https://www.sanity.io/docs/query-cheat-sheet>`_ and it has a cool `GROQ Arcade <https://groq.dev/>`_.
+Looking at the documentation, GROQ seems extremely powerful for altering JSON data, but I don't think it'll work.
+
+(Update August 5) I ended up spending a lot of time looking into GROQ anyway.
+I had problems trying to search the documentation and tutorials for dealing with nested JSON.
+I even ran across `this tutorial <https://css-tricks.com/query-json-documents-in-the-terminal-with-groq/>`_ and I couldn't even get its example to work in GROQ Arcade.
+
+I just looked into Grafana transformations a bit more and I was searching among transformations and finally found
+the `partition by values <https://grafana.com/docs/grafana/latest/panels-visualizations/query-transform-data/transform-data/#partition-by-values>`_ transformation.
+It does exactly what I need!!
+All I have to do is select "Representation" as the field to partition by and it works!
+Now the labels on each line on the graph are called "Battery Voltage <device>".
+I can use a `rename by regex <https://grafana.com/docs/grafana/latest/panels-visualizations/query-transform-data/transform-data/#rename-by-regex>`_ transformation.
+I set match to ``^Battery Voltage (.*)`` and replace to ``$1``.
