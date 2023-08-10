@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'Lavender Docs'
-copyright = '2022, Lavender Shannon'
+copyright = '2023, Lavender Shannon'
 author = 'Lavender Shannon'
 
-release = '0.1'
-version = '0.1.0'
+# release = '0.1'
+# version = '0.1.0'
 
 # -- General configuration
 
@@ -31,7 +31,7 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'

@@ -1,5 +1,5 @@
-Welcome to retrodaredevil's documentation!
-=================================================
+Lavender Docs
+================
 
 This contains documentation, resources and blog posts for and by me (Lavender Shannon).
 You can see my `github here <https://github.com/retrodaredevil>`_.
@@ -42,21 +42,24 @@ Contents
   blog/tech/2023-06-bits
   blog/tech/2023-07-nasplex-to-proxmox
   blog/tech/2023-07-bits
+  blog/tech/2023-08-bits
+  blog/tech/2023-08-openwrt-router.rst
 
 .. toctree::
   :maxdepth: 2
   :caption: External Tutorials
 
   Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
-  linuxserver.io <https://docs.linuxserver.io/>
 
 
 .. toctree::
   :maxdepth: 2
-  :caption: Other Docs
+  :caption: Other
 
   SolarThing <https://solarthing.readthedocs.org/>
   Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
+  link/index
+  notes/index
 
 
 .. toctree::
@@ -67,6 +70,7 @@ Contents
   tutorial/arr
   tutorial/steam
   tutorial/calibre
+
 
 
 TODO

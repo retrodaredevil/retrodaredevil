@@ -41,3 +41,4 @@ All I have to do is select "Representation" as the field to partition by and it 
 Now the labels on each line on the graph are called "Battery Voltage <device>".
 I can use a `rename by regex <https://grafana.com/docs/grafana/latest/panels-visualizations/query-transform-data/transform-data/#rename-by-regex>`_ transformation.
 I set match to ``^Battery Voltage (.*)`` and replace to ``$1``.
+
