@@ -7,6 +7,6 @@ build:
     python: "3.8"
 python:
   install: # https://docs.readthedocs.io/en/stable/config-file/v2.html#requirements-file
-    - requirements: docs/requirements.txt
+    - requirements: docs/source/requirements.txt
 sphinx:
-  configuration: docs/conf.py
+  configuration: docs/source/conf.py
