@@ -1,0 +1,6 @@
+Blog
+=====
+
+.. toctree::
+
+  tech/index

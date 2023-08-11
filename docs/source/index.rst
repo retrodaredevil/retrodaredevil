@@ -11,45 +11,13 @@ but to be documentation for myself to refer to.
 Contents
 --------
 
-
 .. toctree::
-  :maxdepth: 2
-  :caption: Tutorials
 
-  tutorial/docker
-  tutorial/openttd
-  tutorial/openrct2
-  tutorial/minecraft
-  tutorial/virtualbox
-  tutorial/guacamole
-  tutorial/plex
-  tutorial/vaultwarden
-  tutorial/filesystem
-  tutorial/ssh
-  tutorial/wii-mod
-  tutorial/react
-  tutorial/graylog
+  blog/index
+  tutorial/index
+  notes/index
+  link/index
 
-.. toctree::
-  :maxdepth: 2
-  :caption: Tech Blog
-
-  blog/tech/2023-05-building-new-server-running-linux
-  blog/tech/2023-05-bits
-  blog/tech/2023-06-wireguard-setup
-  blog/tech/2023-06-auth-with-caddy
-  blog/tech/2023-06-can-bus-rpi
-  blog/tech/2023-06-bits
-  blog/tech/2023-07-nasplex-to-proxmox
-  blog/tech/2023-07-bits
-  blog/tech/2023-08-bits
-  blog/tech/2023-08-openwrt-router.rst
-
-.. toctree::
-  :maxdepth: 2
-  :caption: External Tutorials
-
-  Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
 
 
 .. toctree::
@@ -58,18 +26,13 @@ Contents
 
   SolarThing <https://solarthing.readthedocs.org/>
   Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
-  link/index
-  notes/index
+  Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
 
 
 .. toctree::
   :maxdepth: 2
   :caption: WIP
 
-  tutorial/simutrans
-  tutorial/arr
-  tutorial/steam
-  tutorial/calibre
 
 
 

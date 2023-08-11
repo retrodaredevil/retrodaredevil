@@ -1,7 +1,11 @@
 \*arr
 =====
 
-This page is incomplete, but has pieces of documentation for configuring the \*arrs.
+.. note::
+
+  This page is work in progress
+
+This has pieces of documentation for configuring the \*arrs.
 This page utilizes many docker images provided by `linuxserver.io <https://www.linuxserver.io/>`_. Thanks linuxserver.io!
 
 TODO
