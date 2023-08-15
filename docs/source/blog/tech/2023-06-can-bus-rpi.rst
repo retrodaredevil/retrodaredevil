@@ -1,5 +1,5 @@
-CAN bus on a Raspberry Pi
-===========================
+June 2023 CAN bus on a Raspberry Pi
+======================================
 
 June 24 - Installing Raspberry Pi OS
 ------------------------------------

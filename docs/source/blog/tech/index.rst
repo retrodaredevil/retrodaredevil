@@ -15,4 +15,5 @@ Tech
   2023-07-nasplex-to-proxmox
   2023-07-bits
   2023-08-bits
-  2023-08-openwrt-router.rst
+  2023-08-openwrt-router
+  2023-08-opnsense-in-proxmox

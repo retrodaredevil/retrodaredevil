@@ -1,0 +1,6 @@
+Electrical
+=============
+
+.. toctree::
+
+  resistor

@@ -1,4 +1,4 @@
-Building a Server To Run Linux (May 2023)
+May 2023 Building a Server To Run Linux
 ==========================================
 
 May 16, 2023

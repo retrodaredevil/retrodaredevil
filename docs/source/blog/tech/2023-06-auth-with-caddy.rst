@@ -1,4 +1,4 @@
-Authorization with Caddy (June 2023)
+June 2023 Authorization with Caddy
 =======================================
 
 I have been using Caddy for a while and I had been using Caddy's basic auth feature to protect each service that cannot be public.

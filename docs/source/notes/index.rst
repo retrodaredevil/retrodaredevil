@@ -9,6 +9,8 @@ Many times, these notes are informal and incomplete.
   devices/index
   linux/index
   docker/index
+  electrical/index
+  misc/index
   wii-mod
   react
   steam

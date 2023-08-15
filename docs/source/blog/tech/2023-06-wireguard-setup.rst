@@ -1,7 +1,7 @@
 .. _wireguard_setup:
 
-Wireguard setup (June 2023)
-============================
+June 2023 WireGuard setup
+======================================
 
 June 12 - My SSH Tunnel VPN Thing Broke
 ------------------------------------------
