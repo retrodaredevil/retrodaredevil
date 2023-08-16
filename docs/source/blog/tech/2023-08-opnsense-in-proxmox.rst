@@ -77,3 +77,29 @@ If I was on its LAN, I should be able to access the web interface, but I am not.
 `This forum post <https://forum.opnsense.org/index.php?topic=573.0>`_ says to make a NAT so that I can access it from the local network I am currently on.
 The `Port forwarding docs <https://docs.opnsense.org/manual/nat.html#port-forwarding>`_ don't seem to show how to do this from the command line,
 so I guess I'll go connect my computer to spiderverse via Ethernet to make this change.
+
+August 15 - Port Forwarding the GUI
+-----------------------------------
+
+Did some playing around. When I do ``2) Set interface IP address``, I needed to configure the LAN to not get its address from DHCP.
+Instead, give it an IP address of 192.168.1.1 and a subnet count of 24, then I enable DHCP on the LAN.
+I have my computer plugged into Ethernet and after making these changes, my computer is given an IP address from the DHCP server!
+I now know that the bottom port is port 0, which currently corresponds to vtnet1.
+I tried going to 192.168.1.1 in my browser, but it didn't work. I press enter inside the console and the IP address is back at 192.168.1.102.
+Interesting...
+Well, I go to that and I see the web interface! Success! I guess?
+I login with root/lavenders_password_here and I'm good to go.
+Continuing with defaults for everything and I notice "Block RFC1918 Private Networks".
+Let's disable this, as I currently want to be able to access it on my private network!
+I also think that having this disabled might be necessary when this is on the school's network,
+as MyResNet attempts to give you your very own LAN (I say attempts because I'm not convinced that it works half the time).
+Eventually it prompts me to set 192.168.1.1 as the LAN network address, which I confirm.
+It says it will reload the dashboard when it is done, but it doesn't and I manually go to 192.168.1.1.
+Yay! Now I can finally configure this knowing everything is setup.
+
+Now I have got port forwarding working with this:
+
+.. figure:: /images/2023-08-15-opnsense-port-forward-443.png
+  :width: 80%
+
+Finally, I can configure it on my main LAN network!
