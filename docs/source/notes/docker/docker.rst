@@ -42,3 +42,40 @@ Then, copy this code into a file called ``compose-attach`` somewhere in your ``$
 
 
 To detach, press CTRL+P, CTRL+Q.
+
+Docker Networking
+---------------------------
+
+Docker Compose Links
+^^^^^^^^^^^^^^^^^^^^^
+
+We know that docker's `--link feature <https://docs.docker.com/network/links/>`_ is deprecated.
+However, docker compose has a links feature that is a bit different.
+The `docs for compose links <https://docs.docker.com/compose/networking/#link-containers>`_ (and `services links <https://docs.docker.com/compose/compose-file/05-services/#links>`_) do not have a note about them being legacy or deprecated.
+However, here are a few URLs that have discussion about this feature being something you should not use:
+
+* https://github.com/docker/docs/issues/4543
+
+  * Links are not supported by ``docker stack deploy``.
+
+* https://stackoverflow.com/a/41294598/5434860
+
+  * "Links have been replaced by networks"
+
+* https://serverfault.com/questions/833592/are-links-deprecated-in-docker-compose
+
+  * Do discussion here, but it asks the exact question I was trying to answer.
+
+More than 30 bridge networks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* https://stackoverflow.com/questions/51439074/docker-limit-user-defined-bridge-networks
+
+  * Manually specify the subnet when creating the network
+  * Change ``"default-address-pools"``: https://docs.docker.com/engine/reference/commandline/dockerd/#on-linux
+
+* https://stackoverflow.com/questions/43720339/docker-error-could-not-find-an-available-non-overlapping-ipv4-address-pool-am
+* https://github.com/moby/moby/pull/36396
+
+
+
