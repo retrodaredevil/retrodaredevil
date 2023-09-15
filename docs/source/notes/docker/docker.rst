@@ -76,6 +76,52 @@ More than 30 bridge networks
 
 * https://stackoverflow.com/questions/43720339/docker-error-could-not-find-an-available-non-overlapping-ipv4-address-pool-am
 * https://github.com/moby/moby/pull/36396
+* https://straz.to/2021-09-08-docker-address-pools/
+
+The default pool is given by this (https://github.com/moby/libnetwork/blob/67e0588f1ddfaf2faf4c8cae8b7ea2876434d91c/ipamutils/utils.go#L18-L21):
+
+.. code-block:: json
+
+  {
+    "default-address-pools" : [
+      {
+        "base": "172.17.0.0/16",
+        "size": 16
+      },
+      {
+        "base": "172.18.0.0/16",
+        "size": 16
+      },
+      {
+        "base": "172.19.0.0/16",
+        "size": 16
+      },
+      {
+        "base": "172.20.0.0/14",
+        "size": 16
+      },
+      {
+        "base": "172.24.0.0/14",
+        "size": 16
+      },
+      {
+        "base": "172.28.0.0/14",
+        "size": 16
+      },
+      {
+        "base": "192.168.0.0/16",
+        "size": 20
+      }
+    ]
+  }
+
+That means that we can create a total of :math:`3 * 2^{16-16} + 3 * 2^{16-14} + 1 * 2^{20-16} = 3 * 1 + 3 * 4 + 1 * 16 = 32` networks.
+But we can't use the ``172.17.0.0/16`` network for bridge networks, so we are left with 31.
+Remember that the ``"size"`` is the netmask of the individual networks, so by increasing it, we decrease the number of IP addresses allowed on a network, but increase the number of possible networks.
+I'm going to change some of the 172.28.0.0/14, size:16 networks to be size 24.
+
+With this change, I should be able to create many more networks without manually specifying the subnet for each of them.
+Now I run ``sudo systemctl restart docker``.
 
 
 
