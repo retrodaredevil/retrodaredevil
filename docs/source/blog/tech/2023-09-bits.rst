@@ -1,0 +1,35 @@
+September 2023 Bits
+===============
+
+September 29 - Debugging OPNsense on MyResNet
+------------------------------------------------
+
+I fucked up OPNsense so I couldn't join the LAN. So I now had to get Proxmox on some sort of a LAN.
+First, I stopped the OPNsense VM.
+I change ``/etc/network/interfaces`` to get it to use DHCP to connect to MyResNet, hoping their private network feature would work like a LAN.
+It did not. With my laptop and server connected to MyResNet, they got IPs of ``11.21.38.66/26`` and ``11.97.161.90/26`` respectively.
+So, I cannot even ping my server while on MyResNet.
+"Personal Area Network" my ass.
+Maybe it just doesn't work because one of my devices is on Ethernet and the other is on WiFi? Eh. Whatever.
+
+So new plan is going to be to use the extra port on my dual NIC to plug my computer directly into.
+Since OPNsense isn't using it for anything anyway, I should be able to plug my Ethernet cables back the way I had them
+and not worry about OPNsense getting in the way of anything when I boot it back up.
+This of course requires me to play around with ``/etc/network/interfaces`` again.
+Wait, new plan, I have a simple travel router.
+This means I can do the same thing, but I won't have to configure a static IP on my laptop or my server.
+I that interface use DHCP and wadaya know, I can access it on my ``192.168.8.0/24`` network now!
+
+Since I can access the Proxmox web GUI now, I can get access to the command line of my OPNsense VM.
+If I configured this a bit differently, I could have gotten the OPNsense WAN interface on my travel router's LAN,
+which would have had the benefit of being able to access the OPNsense GUI (since I port forwarded 443 like a month ago),
+but this has the advantage of being something I can leave like this long term (I can have this Ethernet port be an easy way to get into my machine for debugging).
+
+Now that I'm into OPNsense's shell, I can see that the WAN interface is doing just fine.
+I do not see the LAN interface when I boot in.
+Hmmm, I'm not sure how to enable the LAN interface without reconfiguring it, so I'll just reconfigure.
+After putting in the interfaces for LAN, WAN, and OPT1, all my settings seem to be restored.
+Proxmox can talk to the outside world! Let's see about other devices... Yep!
+
+Note to self in the future: Don't disable the LAN interface!!!
+
