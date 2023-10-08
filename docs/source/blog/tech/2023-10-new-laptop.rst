@@ -117,3 +117,14 @@ Now my ``.gitconfig`` looks like this:
     gpgSign = true
 
 Perfect! That was super easy! Now I make sure to add the key to my GitHub (and school GitLab) as a signing key.
+
+If I make a commit and then run ``git log --show-signature``, I get an error message of ``error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signature verification``.
+`This tutorial <https://blog.dbrgn.ch/2021/11/16/git-ssh-signatures/>`_ recommends that I create a file in ``~/.config/git/allowed_signers``.
+I think I'll version control this file in my own location.
+My ``allowed_signers`` file now looks like this:
+
+.. code-block::
+
+  retrodaredevil@gmail.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzm7cjGRjnJYM65dxcBM83CMmEBWZ3QGcsw1fEIQ4J8ARynrKVCPGDXUDHmbgajxo79xxGDDS4+ZkX9Zia10ULejBbatxXaxH2NaxCNIYNHEdUrEOtGqsE105BT6qJS6QcWfdjPirw2Gz6EWJlxhUR6KOWau18o56krJ87QPrdYgd+iE6yzmHOGtpwkPo+3CNMAZaEwbcSKNPdOutwOAPqj9E/Fw8wUmZK5Ry9tJeIwH0zeM2y1ktfXz1Fgn3E1W3QZ0h6e1b4xJWT1yNVK+b6qB4icDkOxDNNLx4zZ5ylmFpwj0m8fr13MC4N+wBoJUlitjPHjit87asblKavh+a4Am0EbhkKVbC+vBl5X7SnCipeD8XJ3d7anZiLevTIXzmwQ7xwwriieJa8UYFJmYYaJweXyPqEhNm3M+E6fEM+aH8eNlKbkCag9whXdRV+Q31wpJolR53Nlg38KBLR6ZrPLETIfqbTkt/YDSTTfNMX7IvfYnH359Xhu81Z50OspAc= lavender@lavender-legion
+
+It's just the public key with an email before it. Simple enough!
