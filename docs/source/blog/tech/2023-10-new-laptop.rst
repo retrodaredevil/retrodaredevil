@@ -128,3 +128,49 @@ My ``allowed_signers`` file now looks like this:
   retrodaredevil@gmail.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzm7cjGRjnJYM65dxcBM83CMmEBWZ3QGcsw1fEIQ4J8ARynrKVCPGDXUDHmbgajxo79xxGDDS4+ZkX9Zia10ULejBbatxXaxH2NaxCNIYNHEdUrEOtGqsE105BT6qJS6QcWfdjPirw2Gz6EWJlxhUR6KOWau18o56krJ87QPrdYgd+iE6yzmHOGtpwkPo+3CNMAZaEwbcSKNPdOutwOAPqj9E/Fw8wUmZK5Ry9tJeIwH0zeM2y1ktfXz1Fgn3E1W3QZ0h6e1b4xJWT1yNVK+b6qB4icDkOxDNNLx4zZ5ylmFpwj0m8fr13MC4N+wBoJUlitjPHjit87asblKavh+a4Am0EbhkKVbC+vBl5X7SnCipeD8XJ3d7anZiLevTIXzmwQ7xwwriieJa8UYFJmYYaJweXyPqEhNm3M+E6fEM+aH8eNlKbkCag9whXdRV+Q31wpJolR53Nlg38KBLR6ZrPLETIfqbTkt/YDSTTfNMX7IvfYnH359Xhu81Z50OspAc= lavender@lavender-legion
 
 It's just the public key with an email before it. Simple enough!
+
+Windows Setup
+---------------
+
+I setup Windows 11 with a local account by attempting to sign in with the email no@thankyou.com. I was surprised at how well that worked.
+
+* Install
+
+  * Firefox: https://www.mozilla.org/en-US/firefox/new/
+  * WinGet: https://learn.microsoft.com/en-us/windows/package-manager/winget/
+
+    * https://apps.microsoft.com/detail/9NBLGGH4NNS1?hl=en-us&gl=US
+    * winget repository: https://winstall.app
+    * (Was already installed, just needed to be updated)
+
+  * Git & Git Bash: https://git-scm.com/downloads
+
+    * (In powershell) ``winget install --id Git.Git -e --source winget``
+    * This does the default install, which is fine for me because it installs Git Bash too, and that's all I need
+
+  * In Git bash:
+
+    * ``winget install powertoys --source msstore``
+    * ``winget install --id=Valve.Steam -e``
+    * ``winget install --id=JetBrains.Toolbox -e``
+    * ``winget install --id=EpicGames.EpicGamesLauncher -e``
+    * ``winget install --id=OpenWhisperSystems.Signal -e``
+    * ``winget install --id=Discord.Discord -e``
+    * ``winget install --id=Mojang.MinecraftLauncher -e``
+
+  * Find my drivers: https://www.nvidia.com/download/index.aspx?lang=en-us
+
+    * Restart PC after doing this
+    * Go to System > Display > Advanced display
+
+      * Confirm internal display is at 240Hz
+
+* Remap caps lock
+
+  * PowerToys Settings > Keyboard Manager > Remap a key
+
+* Make Minecraft use GPU
+
+  * System > Display > Graphics
+  * Add an app, find ``javaw`` in the Minecraft Launcher program files
+  * javaw > Graphics preference > High performance
