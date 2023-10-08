@@ -1,6 +1,7 @@
 October 2023 New Laptop
 ====================
 
+https://www.microcenter.com/product/663735/lenovo-legion-pro-5-16-gaming-laptop-computer-platinum-collection-onyx-grey
 
 October 7 - Installing OS
 -------------------------
@@ -33,3 +34,86 @@ I try running it, and it complains about ``wimlib-imagex`` not being available i
 A ``sudo apt install wimtools`` does the trick to fix the problem.
 Now I make sure my USB drive is ``/dev/sda`` and then run ``sudo bash Downloads/woeusb-5.2.4.bash --device Downloads/Win11_22H2_English_x64v2.iso /dev/sda``.
 
+Pop!_OS Setup
+----------------------
+
+May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933ef0c017d96c
+
+* Install:
+
+  * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen``
+  * https://www.jetbrains.com/toolbox-app/download
+  * https://discord.com/download
+  * RGB Keyboard Control: https://github.com/4JX/L5P-Keyboard-RGB
+  * Minecraft: https://www.minecraft.net/en-us/download
+  * Cheese: ``sudo apt install cheese``
+
+* Add SSH key: https://github.com/settings/keys
+* Clone programming repo (https://github.com/retrodaredevil/programming)
+* Install `GNOME Tweaks <https://pop-os.github.io/docs/customize-pop/gnome-tweaks-extensions/gnome-tweaks.html>`_ by running ``sudo apt install gnome-tweaks``
+
+  * Launch the Tweaks application, Keyboard & Mouse > Additional Layout Options > Make Caps Lock an additional Esc
+  * Restart IntelliJ if you have it open
+
+Git Signing Key
+^^^^^^^^^^^^^^^
+
+I have git version 2.34.1, so that means I can use my SSH key as my signing key if I would like.
+Normally, my ``.gitconfig`` looks like this:
+
+.. code-block::
+
+  [user]
+    name = Lavender Shannon
+    signingkey = E274ED307902B127
+  [includeIf "gitdir/i:~/programming/"]
+    path = ~/programming/.gitconfig-default
+  [includeIf "gitdir:~/programming/.git/modules/Mst/"]
+    path = ~/programming/Mst/.gitconfig-mst
+
+  [filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+  [commit]
+    gpgSign = true
+  [tag]
+    gpgSign = true
+
+However, now I can instead follow this tutorial: https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key
+
+.. code-block:: shell
+
+  git config --global gpg.format ssh
+  git config --global user.signingkey /home/lavender/.ssh/id_rsa.pub
+
+Now my ``.gitconfig`` looks like this:
+
+.. code-block::
+
+
+  [user]
+    name = Lavender Shannon
+    signingkey = /home/lavender/.ssh/id_rsa.pub
+  [gpg]
+    format = ssh
+
+  [includeIf "gitdir/i:~/programming/"]
+    path = ~/programming/.gitconfig-default
+  [includeIf "gitdir:~/programming/.git/modules/Mst/"]
+    path = ~/programming/Mst/.gitconfig-mst
+
+  [filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+  [commit]
+    gpgSign = true
+  [tag]
+    gpgSign = true
+
+Perfect! That was super easy! Now I make sure to add the key to my GitHub (and school GitLab) as a signing key.
