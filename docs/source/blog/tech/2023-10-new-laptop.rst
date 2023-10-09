@@ -43,10 +43,12 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
   * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen``
   * https://www.jetbrains.com/toolbox-app/download
-  * https://discord.com/download
+  * https://discord.com/download (Alternatively install from Pop!_Shop)
   * RGB Keyboard Control: https://github.com/4JX/L5P-Keyboard-RGB
   * Minecraft: https://www.minecraft.net/en-us/download
   * Cheese: ``sudo apt install cheese``
+  * Signal: https://signal.org/download (Alternatively install from Pop!_Shop)
+  * Steam: From Pop!_Shop
 
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
@@ -174,3 +176,22 @@ I setup Windows 11 with a local account by attempting to sign in with the email 
   * System > Display > Graphics
   * Add an app, find ``javaw`` in the Minecraft Launcher program files
   * javaw > Graphics preference > High performance
+
+Laggy External Display in Pop!_OS
+------------------------------------
+
+My external display is quite a bit more laggy than my internal one.
+I'm running NVIDIA Graphics, but let's try hybrid mode (even though people seem to think that causes issues).
+Hybrid graphics doesn't seem to change anything, but if I open NVIDIA Settings > GPU 0 > PowerMizer and set Preferred Mode to Maximum, it works!
+(Thanks https://github.com/pop-os/pop/issues/2747#issuecomment-1371025332)
+
+Screenshots in Pop!_OS
+---------------------------
+
+I'll be using the Print key to start to make my selection, then I save it and it shows up in recents.
+I'll still have to play around with this.
+
+Monitor Scaling in Pop!_OS
+-----------------------------
+
+Follow this to scale monitors individually: https://askubuntu.com/questions/1084069/how-to-set-different-scaling-on-multi-monitor-3-monitors
