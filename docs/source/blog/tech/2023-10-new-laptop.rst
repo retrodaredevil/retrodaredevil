@@ -41,7 +41,8 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
 * Install:
 
-  * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen``
+  * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen ipython3``
+  * Setup flathub: ``flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo``
   * https://www.jetbrains.com/toolbox-app/download
   * https://discord.com/download (Alternatively install from Pop!_Shop)
   * RGB Keyboard Control: https://github.com/4JX/L5P-Keyboard-RGB
@@ -49,6 +50,11 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
   * Cheese: ``sudo apt install cheese``
   * Signal: https://signal.org/download (Alternatively install from Pop!_Shop)
   * Steam: From Pop!_Shop
+  * DisplayLink drivers: https://www.synaptics.com/products/displaylink-graphics/downloads/ubuntu
+  * Plexamp: ``flatpak install --user --assumeyes flathub com.plexamp.Plexamp``
+  * Pithos: ``flatpak install --user --assumeyes flathub io.github.Pithos`` https://pithos.github.io/#install
+  * Chromium: ``flatpak install --user --assumeyes org.chromium.Chromium`` https://flathub.org/apps/org.chromium.Chromium
+  * Zoom: ``flatpak install --user --assumeyes us.zoom.Zoom`` https://flathub.org/apps/us.zoom.Zoom
 
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
@@ -56,6 +62,13 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
   * Launch the Tweaks application, Keyboard & Mouse > Additional Layout Options > Make Caps Lock an additional Esc
   * Restart IntelliJ if you have it open
+
+* Remaps: Settings > Keyboard > Keyboard Shortcuts
+
+  * Ctrl+Alt+T to Open Terminal
+
+    *  Search "Launch Terminal" > Add another shortcut
+
 
 Git Signing Key
 ^^^^^^^^^^^^^^^
@@ -195,3 +208,70 @@ Monitor Scaling in Pop!_OS
 -----------------------------
 
 Follow this to scale monitors individually: https://askubuntu.com/questions/1084069/how-to-set-different-scaling-on-multi-monitor-3-monitors
+
+Lessons Learned in Buying this Laptop
+---------------------------------------
+
+* Don't get an NVIDIA GPU (Getting it to be not glitchy on Linux is a pain)
+* Make sure there are some thunderbolt USB C ports. Also understand how a display connected via USB C interacts with the graphics card
+* Understand if the HDMI port requires the GPU to be used
+
+October 9 - About the NVIDIA graphics
+---------------------------------------------------------------------
+
+Hybrid mode is worse than NVIDIA Graphics for external monitors.
+Don't use hybrid mode unless you don't plan on using an external monitor.
+
+Here is the output of ``inxi -G`` when selecting Hybrid Graphics in Pop!_OS.
+I believe it actually ends up being the same as when using NVIDIA Graphics mode.
+
+.. code-block:: console
+
+  lavender@lavender-legion:~$ inxi -G
+  Graphics:
+    Device-1: Intel driver: i915 v: kernel
+    Device-2: NVIDIA driver: nvidia v: 535.113.01
+    Device-3: Luxvisions Innotech Integrated Camera type: USB
+      driver: uvcvideo
+    Display: x11 server: X.Org v: 1.21.1.4 driver: X:
+      loaded: modesetting,nvidia unloaded: fbdev,nouveau,vesa gpu: i915
+      resolution: 1: 1920x1080~60Hz 2: 2560x1600~240Hz
+    OpenGL: renderer: Mesa Intel Graphics (RPL-S)
+      v: 4.6 Mesa 23.1.3-1pop0~1689084530~22.04~0618746
+
+Here is the correct output of ``nvidia-smi`` indicating that things are using the GPU:
+
+
+.. code-block:: console
+
+  lavender@lavender-legion:~$ nvidia-smi
+  Tue Oct 10 12:22:32 2023
+  +---------------------------------------------------------------------------------------+
+  | NVIDIA-SMI 535.113.01             Driver Version: 535.113.01   CUDA Version: 12.2     |
+  |-----------------------------------------+----------------------+----------------------+
+  | GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+  |                                         |                      |               MIG M. |
+  |=========================================+======================+======================|
+  |   0  NVIDIA GeForce RTX 4070 ...    Off | 00000000:01:00.0  On |                  N/A |
+  | N/A   38C    P5               4W / 140W |    858MiB /  8188MiB |     41%      Default |
+  |                                         |                      |                  N/A |
+  +-----------------------------------------+----------------------+----------------------+
+
+  +---------------------------------------------------------------------------------------+
+  | Processes:                                                                            |
+  |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+  |        ID   ID                                                             Usage      |
+  |=======================================================================================|
+  |    0   N/A  N/A      2696      G   /usr/lib/xorg/Xorg                          487MiB |
+  |    0   N/A  N/A      2999      G   /usr/bin/gnome-shell                         67MiB |
+  |    0   N/A  N/A      4862      G   firefox                                     179MiB |
+  |    0   N/A  N/A      5694      G   ...,WinRetrieveSuggestionsOnlyOnDemand       39MiB |
+  |    0   N/A  N/A      9084      G   ...ures=SpareRendererForSitePerProcess       15MiB |
+  |    0   N/A  N/A     16110      G   ...bian-installation/ubuntu12_32/steam        2MiB |
+  |    0   N/A  N/A     16120      G   ...allation/ubuntu12_64/steamwebhelper        6MiB |
+  |    0   N/A  N/A     29033      G   ...ures=SpareRendererForSitePerProcess        3MiB |
+  +---------------------------------------------------------------------------------------+
+
+Notice specifically that ``/usr/lib/xorg/Xorg`` is using more than 10MiB of memory.
+If it is using something like 4MiB of memory, then it's not really using the GPU at all.
