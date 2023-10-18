@@ -3,6 +3,8 @@ October 2023 New Laptop
 
 https://www.microcenter.com/product/663735/lenovo-legion-pro-5-16-gaming-laptop-computer-platinum-collection-onyx-grey
 
+https://psref.lenovo.com/Detail/Legion_Pro_5_16IRX8?M=82WK0045US
+
 October 7 - Installing OS
 -------------------------
 
@@ -41,7 +43,7 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
 * Install:
 
-  * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen ipython3``
+  * ``sudo apt install -y net-tools vim-gtk iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen ipython3 gparted``
   * Setup flathub: ``flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo``
   * https://www.jetbrains.com/toolbox-app/download
   * https://discord.com/download (Alternatively install from Pop!_Shop)
@@ -55,6 +57,10 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
   * Pithos: ``flatpak install --user --assumeyes flathub io.github.Pithos`` https://pithos.github.io/#install
   * Chromium: ``flatpak install --user --assumeyes org.chromium.Chromium`` https://flathub.org/apps/org.chromium.Chromium
   * Zoom: ``flatpak install --user --assumeyes us.zoom.Zoom`` https://flathub.org/apps/us.zoom.Zoom
+  * Docker: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+  * SDKMAN: ``curl -s "https://get.sdkman.io" | bash`` https://sdkman.io/install
+
+    * ``sdk install java 21-tem``
 
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
@@ -275,3 +281,8 @@ Here is the correct output of ``nvidia-smi`` indicating that things are using th
 
 Notice specifically that ``/usr/lib/xorg/Xorg`` is using more than 10MiB of memory.
 If it is using something like 4MiB of memory, then it's not really using the GPU at all.
+
+Enable Hybernation in Pop!_OS
+-------------------------------------
+
+At some point, I'll run through this tutorial: https://support.system76.com/articles/enable-hibernation/
