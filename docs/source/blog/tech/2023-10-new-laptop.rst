@@ -178,6 +178,7 @@ I setup Windows 11 with a local account by attempting to sign in with the email 
     * ``winget install --id=OpenWhisperSystems.Signal -e``
     * ``winget install --id=Discord.Discord -e``
     * ``winget install --id=Mojang.MinecraftLauncher -e``
+    * ``winget install --id=Plex.Plexamp -e``
 
   * Find my drivers: https://www.nvidia.com/download/index.aspx?lang=en-us
 
@@ -195,6 +196,45 @@ I setup Windows 11 with a local account by attempting to sign in with the email 
   * System > Display > Graphics
   * Add an app, find ``javaw`` in the Minecraft Launcher program files
   * javaw > Graphics preference > High performance
+
+* Turn off tap to click
+
+  * Settings -> Bluetooth and Devices -> Touchpad -> Taps - Turn all off
+
+* IntelliJ
+
+  * Set terminal to Git Bash
+
+    * Settings -> Tools -> Terminal
+
+``.gitconfig`` in Windows
+----------------------------
+
+It's fairly similar to how I did it on linux, it's just slightly different.
+
+.. code-block::
+
+  [user]
+    name = Lavender Shannon
+    signingkey = /c/Users/lavender/.ssh/id_rsa.pub
+  [gpg]
+    format = ssh
+
+  [includeIf "gitdir/i:~/programming/"]
+    path = ~/programming/.gitconfig-default
+  [includeIf "gitdir:~/programming/.git/modules/Mst/"]
+    path = ~/programming/Mst/.gitconfig-mst
+
+  [filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+  [commit]
+    gpgSign = true
+  [tag]
+    gpgSign = true
 
 Laggy External Display in Pop!_OS
 ------------------------------------
