@@ -62,6 +62,8 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
     * ``sdk install java 21-tem``
 
+  * VS Code: ``flatpak install --user --assumeyes com.visualstudio.code`` https://flathub.org/apps/com.visualstudio.code
+
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
 * Install `GNOME Tweaks <https://pop-os.github.io/docs/customize-pop/gnome-tweaks-extensions/gnome-tweaks.html>`_ by running ``sudo apt install gnome-tweaks``
@@ -286,3 +288,16 @@ Enable Hybernation in Pop!_OS
 -------------------------------------
 
 At some point, I'll run through this tutorial: https://support.system76.com/articles/enable-hibernation/
+
+Debounce Keyboard Presses
+--------------------------
+
+The keyboard on this laptop seems to have a small problem where a key is sometimes registered as being pressed twice when I only pressed it once.
+This is fairly uncommon, but it's happening a lot more than my last laptop's keyboard.
+The solution to this in Pop!_OS is to go to Settings -> Accessibility -> Typing -> Typing Assist (AccessX) -> Bounce Keys.
+Now set the "Acceptance delay" to be very, very small. I mean small as in almost all the way to the left. If you make it even slightly too long,
+it will not really be a debounce and is more designed for people who actually need accessibility for this kind of thing.
+For fun, I'll enable "Beep when a key is rejected" because it means that, in theory, I should hear when one of my keypresses is rejected.
+Sure enough, just 2 minutes into some coding, I hear a "ding" after finishing a word.
+I didn't mean to input that character twice, but I guess my physical keyboard thought I typed that character twice.
+Ha! Not today keyboard. I have software to fix you!
