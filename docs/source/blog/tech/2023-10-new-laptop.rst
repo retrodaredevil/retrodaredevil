@@ -324,7 +324,7 @@ Here is the correct output of ``nvidia-smi`` indicating that things are using th
 Notice specifically that ``/usr/lib/xorg/Xorg`` is using more than 10MiB of memory.
 If it is using something like 4MiB of memory, then it's not really using the GPU at all.
 
-Enable Hybernation in Pop!_OS
+Enable Hibernation in Pop!_OS
 -------------------------------------
 
 At some point, I'll run through this tutorial: https://support.system76.com/articles/enable-hibernation/
@@ -341,3 +341,34 @@ For fun, I'll enable "Beep when a key is rejected" because it means that, in the
 Sure enough, just 2 minutes into some coding, I hear a "ding" after finishing a word.
 I didn't mean to input that character twice, but I guess my physical keyboard thought I typed that character twice.
 Ha! Not today keyboard. I have software to fix you!
+
+New SSD
+-----------
+
+https://manpages.ubuntu.com/manpages/lunar/en/man8/mount.ntfs.8.html
+
+I got a Samsung SSD installed in my M.2 spot.
+I partitioned it with a GPT partition table.
+I need to create an ``/etc/fstab`` entry for it.
+I use ``ls -l /dev/disk/by-uuid/`` to get the UUID for my drive, which is mounted at ``/dev/nvme1n1p1``.
+The ID is ``23D17A16325AFC50``, so my entry will look like this:
+
+.. code-block::
+
+  UUID=23D17A16325AFC50 /srv/extreme ntfs-3g windows_names,hide_dot_files,norecover,uid=0,gid=2505,umask=003 0 0
+
+Reasons for each option:
+
+* ``windows_names`` - prevent Linux from creating files with names not compatible with Windows
+* ``hide_dot_files`` - when Linux creates a file or directory beginning with ``.``, it should appear hidden on Windows
+* ``norecover`` - If Windows did not unmount this drive properly, then we don't need to try and mount it
+* ``uid=0`` and ``gid=2505`` - All files should appear with ownership root:extreme, where extreme is the group I create below
+* ``umask=003`` - keep read permission for others, but take away write and execute permissions
+
+
+Creating the ``extreme`` group:
+
+.. code-block:: shell
+
+  sudo groupadd --gid 2505 extreme
+  sudo usermod --append --groups extreme lavender
