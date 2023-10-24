@@ -372,3 +372,122 @@ Creating the ``extreme`` group:
 
   sudo groupadd --gid 2505 extreme
   sudo usermod --append --groups extreme lavender
+
+ACPI Error Crashes Pop!_OS When Awake from Suspend after plugging in external monitor
+----------------------------------------------------------------------------------------
+
+So yeah, sometimes when I plug my external monitor in right before awaking from suspend, I get some errors.
+Sometimes not even if I plug in an external monitor.
+Here's a snippet of ``journalctl``.
+
+.. code-block::
+
+  Oct 23 15:01:39 lavender-legion kernel: Freezing user space processes
+  Oct 23 15:01:39 lavender-legion kernel: Freezing user space processes completed (elapsed 0.002 seconds)
+  Oct 23 15:01:39 lavender-legion kernel: OOM killer disabled.
+  Oct 23 15:01:39 lavender-legion kernel: Freezing remaining freezable tasks
+  Oct 23 15:01:39 lavender-legion kernel: Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+  Oct 23 15:01:39 lavender-legion kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: interrupt blocked
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: PM: Preparing to enter system sleep state S3
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: event blocked
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: EC stopped
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: PM: Saving platform NVS memory
+  Oct 23 15:01:39 lavender-legion kernel: Disabling non-boot CPUs ...
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: CPU 1 is now offline
+  ...
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: CPU 23 is now offline
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: PM: Low-level resume complete
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: EC started
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: PM: Restoring platform NVS memory
+  Oct 23 15:01:39 lavender-legion kernel: Enabling non-boot CPUs ...
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 1 APIC 0x1
+  Oct 23 15:01:39 lavender-legion kernel: CPU1 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 2 APIC 0x8
+  Oct 23 15:01:39 lavender-legion kernel: CPU2 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 3 APIC 0x9
+  Oct 23 15:01:39 lavender-legion kernel: CPU3 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 4 APIC 0x10
+  ...
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 14 APIC 0x38
+  Oct 23 15:01:39 lavender-legion kernel: CPU14 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 15 APIC 0x39
+  Oct 23 15:01:39 lavender-legion kernel: CPU15 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 16 APIC 0x40
+  Oct 23 15:01:39 lavender-legion kernel: core: cpu_atom PMU driver: PEBS-via-PT
+  Oct 23 15:01:39 lavender-legion kernel: ... version:                5
+  Oct 23 15:01:39 lavender-legion kernel: ... bit width:              48
+  Oct 23 15:01:39 lavender-legion kernel: ... generic registers:      6
+  Oct 23 15:01:39 lavender-legion kernel: ... value mask:             0000ffffffffffff
+  Oct 23 15:01:39 lavender-legion kernel: ... max period:             00007fffffffffff
+  Oct 23 15:01:39 lavender-legion kernel: ... fixed-purpose events:   3
+  Oct 23 15:01:39 lavender-legion kernel: ... event mask:             000000070000003f
+  Oct 23 15:01:39 lavender-legion kernel: CPU16 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 17 APIC 0x42
+  Oct 23 15:01:39 lavender-legion kernel: CPU17 is up
+  ...
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 22 APIC 0x4c
+  Oct 23 15:01:39 lavender-legion kernel: CPU22 is up
+  Oct 23 15:01:39 lavender-legion kernel: smpboot: Booting Node 0 Processor 23 APIC 0x4e
+  Oct 23 15:01:39 lavender-legion kernel: CPU23 is up
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: PM: Waking up from system sleep state S3
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: interrupt unblocked
+  Oct 23 15:01:39 lavender-legion kernel: ACPI: EC: event unblocked
+  Oct 23 15:01:39 lavender-legion kernel: nvme nvme1: Shutdown timeout set to 8 seconds
+  Oct 23 15:01:39 lavender-legion kernel: nvme nvme1: 24/0/0 default/read/poll queues
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: No handler for Region [RTCM] (00000000e3b61ac4) [SystemCMOS] (20230331/evregion-130)
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Region SystemCMOS (ID=5) has no handler (20230331/exfldio-261)
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: No Local Variables are initialized for Method [SNTM]
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: No Arguments are initialized for method [SNTM]
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0.SNTM due to previous error (AE_NOT_EXIST) (20230331/psparse-529)
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0._Q77 due to previous error (AE_NOT_EXIST) (20230331/psparse-529)
+  Oct 23 15:01:39 lavender-legion kernel: nvme nvme0: 24/0/0 default/read/poll queues
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: No handler for Region [RTCM] (00000000e3b61ac4) [SystemCMOS] (20230331/evregion-130)
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Region SystemCMOS (ID=5) has no handler (20230331/exfldio-261)
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: No Local Variables are initialized for Method [SNTM]
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: No Arguments are initialized for method [SNTM]
+  Oct 23 15:01:39 lavender-legion kernel:
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0.SNTM due to previous error (AE_NOT_EXIST) (20230331/psparse-529)
+  Oct 23 15:01:39 lavender-legion kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0._Q77 due to previous error (AE_NOT_EXIST) (20230331/psparse-529)
+  Oct 23 15:01:39 lavender-legion kernel: usb 1-11: reset high-speed USB device number 5 using xhci_hcd
+  Oct 23 15:01:39 lavender-legion kernel: pcieport 0000:00:1d.4: PCI bridge to [bus 0e]
+  Oct 23 15:01:39 lavender-legion kernel: pcieport 0000:00:1d.4:   bridge window [mem 0x83100000-0x831fffff]
+  Oct 23 15:01:39 lavender-legion kernel: pcieport 0000:00:1b.5: PCI bridge to [bus 08]
+  Oct 23 15:01:39 lavender-legion kernel: pcieport 0000:00:1b.5:   bridge window [io  0x4000-0x4fff]
+  Oct 23 15:01:39 lavender-legion kernel: pcieport 0000:00:1b.5:   bridge window [mem 0x83200000-0x832fffff]
+  Oct 23 15:01:39 lavender-legion kernel: OOM killer enabled.
+  Oct 23 15:01:39 lavender-legion systemd-resolved[1122]: Clock change detected. Flushing caches.
+  Oct 23 15:01:39 lavender-legion acpid[1188]: client 3379[1000:1000] has disconnected
+  Oct 23 15:01:39 lavender-legion systemd-logind[1229]: Lid opened.
+  Oct 23 15:01:39 lavender-legion systemd[1]: Starting Refresh fwupd metadata and update motd...
+  Oct 23 15:01:39 lavender-legion kernel: Restarting tasks ... done.
+  Oct 23 15:01:39 lavender-legion kernel: random: crng reseeded on system resumption
+  Oct 23 15:01:39 lavender-legion kernel: thermal thermal_zone11: failed to read out thermal zone (-61)
+  Oct 23 15:01:39 lavender-legion systemd[1]: fwupd-refresh.service: Deactivated successfully.
+  Oct 23 15:01:39 lavender-legion systemd[1]: Finished Refresh fwupd metadata and update motd.
+  ...
+
+With some of that output, I was able to find this answer: https://unix.stackexchange.com/a/593539.
+The answer recommends adding ``acpi=off`` via the grub menu.
+Problem is, I don't actually have grub installed yet.
+It might be worth installing the grub bootloader to potentially fix this annoying problem.
+
+It turns out that Pop!_OS `uses Systemd-boot by default <https://support.system76.com/articles/bootloader/>`_.
+A quick run of ``[ -d /sys/firmware/efi ] && echo "Installed in UEFI mode" || echo "Installed in Legacy mode"`` shows that I am in UEFI mode.
+I won't continue with the tutorial because it's about repairing the bootloader, rather than changing it.
+
+To understand Systemd-boot a little better, you can read: https://wiki.archlinux.org/title/Systemd-boot.
+A quick run of ``sudo bootctl list`` shows all the OSes it knows about.
+It seems to be correct.
+A quick search of "pop!_os set kernel parameters" brings up many good links for setting kernel parameters in Pop!_OS.
+Running ``sudo kernelstub --print-config`` shows that my kernel boot options are ``quiet loglevel=0 systemd.show_status=false splash``.
+Now I run ``sudo kernelstub --add-options "acpi=off"`` and confirm that the options now contain ``acpi=off``.
+
+After some more research, this Q and A (https://access.redhat.com/solutions/58790) makes me think that
+ACPI is pretty much necessary for a laptop to be functional as a laptop with suspend functionality.
+I think I won't try to boot with ACPI disabled.
