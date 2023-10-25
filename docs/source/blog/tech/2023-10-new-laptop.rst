@@ -342,6 +342,10 @@ Sure enough, just 2 minutes into some coding, I hear a "ding" after finishing a 
 I didn't mean to input that character twice, but I guess my physical keyboard thought I typed that character twice.
 Ha! Not today keyboard. I have software to fix you!
 
+To see what value was set here, you can run ``gsettings get org.gnome.desktop.a11y.keyboard bouncekeys-delay``
+A value of 55 seems to work decently.
+See also: https://unix.stackexchange.com/a/530090
+
 New SSD
 -----------
 

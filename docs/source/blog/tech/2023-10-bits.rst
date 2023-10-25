@@ -45,3 +45,52 @@ so I'm not worried about it.
 
 So ``zfs list`` shows the correct available space. Yay!
 
+Giving part of the drive to shork
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I have the option of just passing through ``/manta`` manually, but I think I'll let proxmox handle this this time.
+Inside the resources tab in shork, I'll create a mount point and give it 14 TB (14336 GB).
+I'll temporarily give it a path of ``/srv/lavender_drive2``, and I don't want this to be part of the backup job.
+Now the folder ``/manta/subvol-100-disk-0`` exists in my Proxmox host, which is good.
+
+Now I can run ``sudo rsync -a --partial --progress /srv/lavender_drive1/media /srv/lavender_drive2/`` in the background on shork and be good!
+
+October 24 - Multiple OPNsense WAN Ports
+--------------------------------------------
+
+In theory, I should be able to register multiple MAC addresses through the MyResNet router and each MAC address should gets its own bandwidth limitations.
+This means that unlike most cases for having multiple WAN ports in OPNsense, I only need a single physical connection.
+Remember that my OPNsense is running inside of Proxmox, and I already have the necessary interfaces passed through.
+
+We will follow https://docs.opnsense.org/manual/how-tos/multiwan.html.
+I'll follow the first step to add a monitor IP address to my WAN.
+Followed the rest of the tutorial down to "Configure Load Balancing".
+Awesome! Everything seems to still be working!
+However, I only added a single gateway to the gateway group.
+I need to create some more WAN interfaces.
+`Interface configuration <https://docs.opnsense.org/manual/interfaces.html>`_ tells me that I can go to Interface > Assignments > New Interface to create a new interface.
+I would create another interface that uses the same network port as WAN, but it won't let me do that!
+Time to pass through another virtual interface in Proxmox!
+
+I add another network device that bridges to wmbr1 just like the original WAN port I passed in does.
+This now becomes net3.
+I'll add a few more identical network devices (identical except for the randomly generated MAC address).
+Now I have net1, net3, net4, net5 as network devices in Proxmox.
+After adding the corresponding assignments in OPNsense, I now have WAN, WANvtnet3, WANvtnet4, WANvtnet5.
+For each interface, I configure these:
+
+* Enable
+* Check block private networks, check block bogon networks
+* IPv4 Configuration Type: DHCP
+
+Apply the changes after saving these configurations for each newly added WAN interface.
+Navigate to System > Gateways > Single. Now add a monitor IP for all the new WANs.
+You'll have to use different monitor IPs, so I used some from here: https://developers.cloudflare.com/1.1.1.1/ip-addresses/.
+Remember, these aren't used for DNS, so you can really choose any of them.
+
+Now navigate to System > Gateways > Group, edit the group we made, and set the new WANs as Tier 1s (to be the same as the original WAN).
+That completes the load balancing part of the tutorial, so it should work now.
+
+Annndd... it doesn't seem to work (I can ping, but I cannot access any non-DNS IP addresses).
+I guess I'm not logged into MyResNet properly, which is a task for another day.
+I can undo everything I just did by going into the LAN rules and not using the WAN Group in that default rule.
