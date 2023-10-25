@@ -1,0 +1,47 @@
+October 2023 Bits
+====================
+
+
+October 24 - Creating a RAIDZ-1 Drive in Proxmox
+----------------------------------------------------
+
+https://pve.proxmox.com/wiki/ZFS_on_Linux
+
+RAIDZ-1 is a variation of RAID5, which needs at least 3 drives to work.
+This means that a third of that drive space will be used for parity.
+In the Proxmox web interface, this is just referred to as RAIDZ.
+
+* Serial ending in ``0L`` is Manta 1
+* Serial ending in ``TZ`` is Manta 2
+* Serial ending in ``3D`` is Manta 3
+
+With this information, I can order the drives on the "Create: ZFS" screen.
+
+Now I need to figure out what compression to use.
+For a drive that needs to be accessed fast, I would definitely choose lz4,
+however I can afford to have accessing this drive be a little slower.
+Now, I did debate using a different compression, as `here are some advantages and disadvantages <https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#compression>`_.
+lz4 averages 2.1:1 and gzip averages 2.7:1 compression.
+Now I learn about zstd, which is better than gzip, with slightly less performance tradeoffs compared to gzip.
+`This TrueNAS post <https://www.truenas.com/community/threads/lz4-vs-zstd.89400/post-620055>`_ has convinced me that it's the way to go for this particular drive.
+`This Reddit post <https://www.reddit.com/r/zfs/comments/rk4q2i/lz4_vs_zstd_compression_for_several_tb_of_video/>`_ has me convinced that it won't help much for video files,
+but I think I'll go with zstd anyway.
+
+I will choose zstd for compression
+Once again, I'll keep ashift at the default of 12.
+
+After it's created, the size is bigger than I expected, but I ran across someone `experiencing the same thing <https://serverfault.com/questions/564365/why-is-my-raidz2-pool-larger-than-the-expected-size-calculation>`_,
+so I'm not worried about it.
+
+.. code-block:: console
+
+  # (Some information redacted)
+  root@bigger-fish:~# zpool list
+  NAME      SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
+  manta    21.8T   912K  21.8T        -         -     0%     0%  1.00x    ONLINE  -
+  root@bigger-fish:~# zfs list
+  NAME                         USED  AVAIL     REFER  MOUNTPOINT
+  manta                        607K  14.4T      128K  /manta
+
+So ``zfs list`` shows the correct available space. Yay!
+
