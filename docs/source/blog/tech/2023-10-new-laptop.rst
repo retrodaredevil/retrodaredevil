@@ -18,6 +18,11 @@ I opted to stick with the clean install of Pop!_OS, but decrypting (almost) the 
 I don't feel like it should take that long, but even if it took 30 seconds, that would not be something I want to put up with.
 Alright. Let's do this install again.
 
+.. note::
+
+  (Update October 25) - I believe this took so long not because the drive was encrypted, but because I was likely using hybrid graphics at the time,
+  which I will later discover is glitchy with NVIDIA graphics.
+
 I could do a clean (unencrypted) install, but now that there's no downside to doing a manual install, I will opt for that.
 Now that I see what sizes the default install gave partitions, I will note them here
 
@@ -63,6 +68,12 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
     * ``sdk install java 21-tem``
 
   * VS Code: ``flatpak install --user --assumeyes com.visualstudio.code`` https://flathub.org/apps/com.visualstudio.code
+  * Brew: https://docs.brew.sh/Homebrew-on-Linux
+
+    * ``/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"``
+    * ``sudo apt-get install build-essential``
+    * ``echo 'export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"' >> ~/.bashrc``
+    * ``brew install mosh``
 
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
