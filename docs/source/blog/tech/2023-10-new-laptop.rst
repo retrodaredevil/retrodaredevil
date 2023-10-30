@@ -88,6 +88,15 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
 
     *  Search "Launch Terminal" > Add another shortcut
 
+* Isolate workspaces - Dock only shows windows on current workspace
+
+  * ``gsettings set org.gnome.shell.extensions.dash-to-dock isolate-workspaces true`` (thanks https://askubuntu.com/questions/992558/how-can-i-configure-the-ubuntu-dock-to-show-windows-only-from-the-current-worksp#992559)
+
+* Android Studio Setup
+
+  * https://developer.android.com/studio/run/device
+  * ``sudo usermod -aG plugdev $LOGNAME && sudo apt-get install -y android-sdk-platform-tools-common adb``
+
 
 Git Signing Key
 ^^^^^^^^^^^^^^^
