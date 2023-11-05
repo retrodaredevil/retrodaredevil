@@ -97,6 +97,11 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
   * https://developer.android.com/studio/run/device
   * ``sudo usermod -aG plugdev $LOGNAME && sudo apt-get install -y android-sdk-platform-tools-common adb``
 
+* IntelliJ Setup*
+
+  * Disable Java Bytecode Decompiler Plugin (https://youtrack.jetbrains.com/issue/IDEA-198397/Allow-decompilation-to-be-cancelled)
+  * Note that this does not seem to fix the issue I have of pasting text and then having IntelliJ freeze (only sometimes with a specific payload)
+
 
 Git Signing Key
 ^^^^^^^^^^^^^^^

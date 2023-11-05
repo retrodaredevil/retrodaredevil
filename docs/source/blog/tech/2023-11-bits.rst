@@ -1,0 +1,76 @@
+November 2023 Bits
+======================
+
+
+November 4 - BatteryPi DietPi Setup
+-----------------------------------
+
+Doing another DietPi install using https://dietpi.com/downloads/images/DietPi_RPi-ARMv8-Bookworm.7z
+
+When adding a user, we will use:
+
+.. code-block:: shell
+
+  useradd --create-home --user-group --shell /usr/bin/bash --groups sudo,tty,dialout,video lavender
+
+SolarThing setup
+^^^^^^^^^^^^^^^^^^^
+
+When installing docker using DietPi software, you also need to install docker compose.
+
+solarthing drivers
+
+.. code-block:: shell
+
+  # More info about tiny-initramfs here: https://github.com/MichaIng/DietPi/issues/3055
+  sudo apt install dkms raspberrypi-kernel-headers tiny-initramfs
+  #sudo apt install dkms raspberrypi-kernel-headers initramfs-tools
+  git clone "https://github.com/kasbert/epsolar-tracer"
+  cd epsolar-tracer/xr_usb_serial_common-1a
+  cp -a ../xr_usb_serial_common-1a /usr/src/
+  dkms add -m xr_usb_serial_common -v 1a
+  dkms build -m xr_usb_serial_common -v 1a
+  dkms install -m xr_usb_serial_common -v 1a
+  echo blacklist cdc-acm > /etc/modprobe.d/blacklist-cdc-acm.conf
+  #update-initramfs -u
+  update-tirfs
+  # Now reboot!!!
+
+For 1-wire temperature sensors we used https://solarthing.readthedocs.io/en/latest/config/file/base-json/request/w1-temperature.html
+
+Other Software Setup
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Sadly, homebrew is not supported on ARM processors, and I don't want to try to install it unofficially.
+That means that installing `mosh <https://github.com/mobile-shell/mosh/>`_ will be slightly a PITA, but oh well.
+
+I do want to get `tailspin <https://github.com/bensadeh/tailspin>`_ installed, so I'll use cargo for that.
+
+.. code-block:: shell
+
+  curl https://sh.rustup.rs -sSf | sh
+  # Choose a default install
+  source "$HOME/.cargo/env"
+  sudo apt-get install -y build-essential
+  cargo install tailspin
+  # Note that this takes a looong time to run
+
+
+November 5 - Tailspin on nasplex
+-------------------------------------
+
+I decided to install homebrew locally, like so:
+
+.. code-block:: shell
+
+  git clone https://github.com/Homebrew/brew homebrew
+  eval "$(homebrew/bin/brew shellenv)"
+  brew update --force --quiet
+  chmod -R go-w "$(brew --prefix)/share/zsh"
+
+  sudo apt-get install -y build-essential
+  brew install tailspin
+
+Now I have a brew install that is completely local to my user.
+Tailspin seems to be a bit outdated (2.0.0 released today), but I'm sure it will update soon enough.
+
