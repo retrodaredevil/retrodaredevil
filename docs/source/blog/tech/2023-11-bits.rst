@@ -18,6 +18,13 @@ SolarThing setup
 
 When installing docker using DietPi software, you also need to install docker compose.
 
+Random software to install:
+
+.. code-block:: shell
+
+  sudo apt install -y net-tools vim iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file xsel htop gpg-agent rsync pwgen less
+
+
 solarthing drivers
 
 .. code-block:: shell

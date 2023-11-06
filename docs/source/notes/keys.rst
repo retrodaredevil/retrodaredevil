@@ -10,15 +10,20 @@ Active Keys
 
 lavender-legion (2023-?) (Authentication and Signing)
 
-
-.. code-block
+.. code-block::
 
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzm7cjGRjnJYM65dxcBM83CMmEBWZ3QGcsw1fEIQ4J8ARynrKVCPGDXUDHmbgajxo79xxGDDS4+ZkX9Zia10ULejBbatxXaxH2NaxCNIYNHEdUrEOtGqsE105BT6qJS6QcWfdjPirw2Gz6EWJlxhUR6KOWau18o56krJ87QPrdYgd+iE6yzmHOGtpwkPo+3CNMAZaEwbcSKNPdOutwOAPqj9E/Fw8wUmZK5Ry9tJeIwH0zeM2y1ktfXz1Fgn3E1W3QZ0h6e1b4xJWT1yNVK+b6qB4icDkOxDNNLx4zZ5ylmFpwj0m8fr13MC4N+wBoJUlitjPHjit87asblKavh+a4Am0EbhkKVbC+vBl5X7SnCipeD8XJ3d7anZiLevTIXzmwQ7xwwriieJa8UYFJmYYaJweXyPqEhNm3M+E6fEM+aH8eNlKbkCag9whXdRV+Q31wpJolR53Nlg38KBLR6ZrPLETIfqbTkt/YDSTTfNMX7IvfYnH359Xhu81Z50OspAc= lavender@lavender-legion
+
+batterypi (2023-?) (Authentication and Signing)
+
+.. code-block::
+
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIIjWVU09hY8e23kaIojQPr9ygipsakxWkI1aj6y/YVToKXQKkFCD80MWvyn5EHrExpCFd2G4AmpFHjlJ7hKkLl5eBDiUeT9RENNhFsYfl+anZLG2wu5e7MvpwXzHITvgyuD2FpnmdscXKdUV3n58wY1kRnTpmmq+T69h0apOrym+7ovyAzFaEL36udtyjYfHBd0VyWixkkQ/vE4fgsYAfofN0CHbDlGQjpl8QpArEKcFObVfcDAG2vvLPBT4zOYkwHAa7OABK21fuHypOW79HmgDl+NB7Jf3VovvuzAwb+EG3STVFwHC4Vu4g9u6IBCQjO3mAIQgcRFQ7USUd9YPxLDXEF+uM8hEVBrjwTA8cFWvPmpsBobn5iRo0LcWyanwHwNl/D/2KmJK6aIvM0YgLV72bMg4ib2UZWCcAEbcUJkbSfmLVrDyz0VjI5G6FwZkU8raYQGeaGp/rRpgZp9sPx1njZFYzENg8SxJbEQHCXk+eLSzaCQPkFiOkhRu+wAE= lavender@batterypi
 
 Retired Keys
 ^^^^^^^^^^^^
 
-batterypi (?-2023) (Authentication Only)
+batterypi (?-2023) (Authentication Only) (Revoked from GitHub, should not be in use anywhere)
 
 .. code-block::
 
