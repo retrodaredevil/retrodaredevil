@@ -75,6 +75,22 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
     * ``echo 'export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"' >> ~/.bashrc``
     * ``brew install mosh``
 
+  * Krita: ``flatpak install --user --assumeyes flathub org.kde.krita``
+  * Kdenlive: ``flatpak install --user --assumeyes flathub org.kde.kdenlive``
+  * ISO Image Writer: ``flatpak install --user --assumeyes flathub org.kde.isoimagewriter``
+  * VLC: ``flatpak install --user --assumeyes flathub org.videolan.VLC``
+  * FileZilla: ``flatpak install --user --assumeyes flathub org.filezillaproject.Filezilla``
+  * Audacity: ``flatpak install --user --assumeyes flathub org.audacityteam.Audacity``
+  * Plex: ``flatpak install --user --assumeyes flathub tv.plex.PlexHTPC && flatpak install --user --assumeyes flathub tv.plex.PlexDesktop``
+  * Emulators
+
+    * ``flatpak install --user --assumeyes flathub org.libretro.RetroArch``
+    * ``flatpak install --user --assumeyes flathub org.DolphinEmu.dolphin-emu``
+    * N64 emulator: ``flatpak install --user --assumeyes flathub io.github.gopher64.gopher64``
+    * mGBA: ``flatpak install --user --assumeyes flathub io.mgba.mGBA``
+    * 3DS emulator: ``flatpak install --user --assumeyes flathub org.citra_emu.citra``
+    * Switch emulator: ``flatpak install --user --assumeyes flathub org.ryujinx.Ryujinx``
+
 * Add SSH key: https://github.com/settings/keys
 * Clone programming repo (https://github.com/retrodaredevil/programming)
 * Install `GNOME Tweaks <https://pop-os.github.io/docs/customize-pop/gnome-tweaks-extensions/gnome-tweaks.html>`_ by running ``sudo apt install gnome-tweaks``
