@@ -75,6 +75,8 @@ May be similar to: https://gist.github.com/retrodaredevil/def6d23a03d9e46683933e
     * ``echo 'export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"' >> ~/.bashrc``
     * ``brew install mosh``
 
+* Less essential install
+
   * Krita: ``flatpak install --user --assumeyes flathub org.kde.krita``
   * Kdenlive: ``flatpak install --user --assumeyes flathub org.kde.kdenlive``
   * ISO Image Writer: ``flatpak install --user --assumeyes flathub org.kde.isoimagewriter``
@@ -386,6 +388,23 @@ Ha! Not today keyboard. I have software to fix you!
 To see what value was set here, you can run ``gsettings get org.gnome.desktop.a11y.keyboard bouncekeys-delay``
 A value of 55 seems to work decently.
 See also: https://unix.stackexchange.com/a/530090
+
+A better debounce (Update November 7)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The above keyboard bounce is OK... Actually no, it's pretty bad.
+I found `this stack exchange answer <https://unix.stackexchange.com/a/593086/591317>`_.
+
+.. code-block::
+
+  apt install xkbset
+  xkbset bo 50
+  xkbset exp =bo
+
+After some testing, it's pretty much the exact same as the first solution, so it's not really better, just another option.
+
+I might try this later: https://github.com/finkrer/KeyboardChatteringFix-Linux
+
 
 New SSD
 -----------
