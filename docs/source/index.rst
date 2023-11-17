@@ -66,3 +66,8 @@ TODO
 * Create tutorial for Usenet using https://hub.docker.com/r/linuxserver/sabnzbd
 * Create tutorial for LibreOffice using :docker-hub:`linuxserver/docker-libreoffice`
 * Create tutorial for Immich
+* Check out
+
+  * https://hkupty.github.io/penna/
+  * https://goaccess.io/
+  * https://www.procustodibus.com/blog/2020/12/wireguard-site-to-site-config/
