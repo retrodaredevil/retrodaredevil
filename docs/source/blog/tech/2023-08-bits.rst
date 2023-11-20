@@ -133,7 +133,7 @@ After some tinkering and getting everything on its own network, my caddy file no
 That's a lot of networks!
 
 August 12 - DietPi on RPi 2B r1.2
------------------------------
+--------------------------------------
 
 I got 2 Raspberry Pi 2Bs, so now I gotta do something with em!
 I was able to identify that I have revision 1.2 (it says it on the board).

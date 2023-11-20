@@ -10,7 +10,7 @@ Many times, these notes are informal and incomplete.
   linux/index
   docker/index
   electrical/index
-  misc/index
+  keys
   wii-mod
   react
   steam

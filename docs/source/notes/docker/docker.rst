@@ -124,4 +124,10 @@ With this change, I should be able to create many more networks without manually
 Now I run ``sudo systemctl restart docker``.
 
 
+Docker Cheatsheet
+----------------------
 
+https://devopscycle.com/blog/the-ultimate-docker-cheat-sheet/
+
+.. figure:: /images/the-ultimate-docker-cheat-sheet-4.png
+  :width: 100%

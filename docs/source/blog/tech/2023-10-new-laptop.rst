@@ -1,5 +1,5 @@
 October 2023 New Laptop
-====================
+========================
 
 https://www.microcenter.com/product/663735/lenovo-legion-pro-5-16-gaming-laptop-computer-platinum-collection-onyx-grey
 
