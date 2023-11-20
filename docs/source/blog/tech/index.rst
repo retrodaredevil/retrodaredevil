@@ -19,3 +19,5 @@ Tech
   2023-08-opnsense-in-proxmox
   2023-09-bits
   2023-10-new-laptop
+  2023-10-bits
+  2023-11-bits
