@@ -81,3 +81,50 @@ I decided to install homebrew locally, like so:
 Now I have a brew install that is completely local to my user.
 Tailspin seems to be a bit outdated (2.0.0 released today), but I'm sure it will update soon enough.
 
+November 26 - New NVIDIA Drivers Broke Brightness Control
+------------------------------------------------------------
+
+As shown here: https://unix.stackexchange.com/q/761922/591317 and https://github.com/NVIDIA/open-gpu-kernel-modules/issues/573 and https://github.com/pop-os/nvidia-graphics-drivers/issues/195
+Pop!_OS has shipped a buggy NVIDIA driver so now I must either upgrade or downgrade so that
+I can have brightness control on my laptop's built-in monitor.
+
+Trying and removing Graphics Drivers PPA
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This PPA here: https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa
+has some graphics drivers available.
+Usually its the same version as what Pop!_OS's repositories have, but for the time being this is worth checking out,
+as I have already autoremoved the old NVIDIA drivers that were working perfectly.
+
+.. code-block:: shell
+
+  sudo add-apt-repository ppa:graphics-drivers/ppa
+  sudo apt update
+  apt list -a nvidia-driver-545
+  # Above command gives me the same 545.29.02 version
+  # No point in keeping the PPA around:
+  sudo add-apt-repository -r ppa:graphics-drivers/ppa
+  sudo apt update
+
+Gnome Software Additional Drivers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: shell
+
+  sudo apt install gnome-software
+
+Now launch "Software", click on the 3 bars in the top right. Go to "Additional Drivers".
+Supposedly I'm supposed to be able to downgrade drivers here, but that doesn't seem to be the case.
+Maybe it's because I already autoremoved them? Who knows.
+
+Enable Hybrid Graphics in BIOS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+https://github.com/pop-os/nvidia-graphics-drivers/issues/195
+recommends to enable Hybrid graphics in BIOS. Let's try that as a workaround...
+
+Sure enough. That worked. In my BIOS it's called "Dynamic Graphics".
+However, I had enabled "Discrete Graphics" a while back because it fixed the issue of my computer sometimes freezing before even being able to log in.
+Well, I guess this is a good compromise for now. Soon enough 545.29.06 will be available to me and I can switch these settings back...
+
+

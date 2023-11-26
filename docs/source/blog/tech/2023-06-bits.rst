@@ -139,7 +139,7 @@ The lower limit was set to 108 vac.
 The transfer delay was set to 60 cycles.
 To figure out what these meant I tried looking at `MATE Series Overview <https://www.outbackpower.com/downloads/documents/system_management/mate/mate_overview_english.pdf>`_,
 but it only shows how to navigate the menus, not what each setting means.
-We have two VFX3524 Outback FX units, so I found `FX Series <https://www.outbackpower.com/downloads/documents/n_series/FX_series_Install.pdf>`,
+We have two VFX3524 Outback FX units, so I found `FX Series <https://www.outbackpower.com/downloads/documents/n_series/FX_series_Install.pdf>`_,
 but that doesn't say anything about what the Lower Limit or Transfer Delay does.
 I read `AC Transfer switching time <https://forum.outbackpower.com/viewtopic.php?f=16&t=7240>`_ and `Long transfer time causes system failure <https://forum.outbackpower.com/viewtopic.php?t=7229>`_.
 One person even recommends setting it to 2 cycles or less, which I think is not what we should do, but hey, at least it gets the job done for someone.
