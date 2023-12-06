@@ -127,4 +127,27 @@ Sure enough. That worked. In my BIOS it's called "Dynamic Graphics".
 However, I had enabled "Discrete Graphics" a while back because it fixed the issue of my computer sometimes freezing before even being able to log in.
 Well, I guess this is a good compromise for now. Soon enough 545.29.06 will be available to me and I can switch these settings back...
 
+Update (2023-12-06)
+^^^^^^^^^^^^^^^^^^^^^
+
+About a week ago they released ``545.29.06``, and that fixed the brightness problem I was having.
+However, now my DisplayPort over USB C dock is acting up.
+If I leave my third monitor plugged in, after my computer wakes from sleep or even sometimes when my screen turns off then back on,
+my computer will be normal for a few seconds, and then completely freeze.
+This is not ideal.
+
+I'm writing this to document that I believe before ``545.29.02`` was installed I had either the 535 or 525 drivers installed.
+I looked at my apt history and I found this command:
+
+.. code-block:: shell
+
+  apt-get install -y system76-acpi-dkms system76-dkms system76-io-dkms amd-ppt-bin nvidia-driver-525
+
+I believe that installed ``nvidia-driver-535:amd64 (535.113.01-1pop0~1695753528~22.04~0561f9e, automatic)`` - the ``535.113.01`` version.
+At some point I might uninstall my current drivers and stick with that driver.
+(I confirmed that this is the case as I actually have the output of ``nvidia-smi`` in my new-laptop page.
+That driver does have the downside that if my screen isn't constantly changing, it will glitch out, but I would rather have that than lack decent monitor support.
+
+For future me: https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/XFree86/Linux-x86_64/535.113.01/NVIDIA-Linux-x86_64-535.113.01.run&lang=us&type=geforcem
+
 
