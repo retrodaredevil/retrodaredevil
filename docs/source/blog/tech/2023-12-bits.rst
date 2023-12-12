@@ -1,0 +1,67 @@
+December 2023 Bits
+===========================
+
+December 12 - Getting old nvidia drivers back
+-------------------------------------------------
+
+On this laptop, I've had the best luck with 535.113.01 drivers, so I will install that straight from NVIDIA!
+
+.. code-block:: shell
+
+  sudo apt remove ~nnvidia system76-driver-nvidia
+  sudo reboot
+  # make sure to select "Hybrid Graphics" in BIOS
+
+Now that I'm booted back in, I try running the installer from NVIDIA and get this error message:
+
+.. code-block::
+
+
+   The major and minor number of the compiler used to
+   compile the kernel:
+
+   x86_64-linux-gnu-gcc-12 (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38
+
+   does not match the compiler used here:
+
+   cc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+
+That error points me to this: https://forums.developer.nvidia.com/t/compiler-mismatch-error-while-installing-cuda-12-0-on-ubuntu-22-04/262976
+
+So basically, I have ``gcc`` (``cc`` points to ``gcc``) version 11.4.0 on my system, and I need to use a more up to date version.
+
+.. code-block:: shell
+
+  sudo apt install g++-12 gcc-12
+  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100 --slave /usr/bin/g++ g++ /usr/bin/g++-12 --slave /usr/bin/gcov gcov /usr/bin/gcov-12
+  # since we already have gcc-11 installed, we can do this so we can easily revert back to it later
+  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 90 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
+  # now if we need to revert back:
+  sudo update-alternatives --config gcc
+  gcc --version
+  # should print version 12
+
+Now that we have that figured out, I get this error:
+
+.. code-block::
+
+  WARNING: Unable to determine the path to install the libglvnd EGL vendor library config files. Check that
+           you have pkg-config and the libglvnd development libraries installed, or specify a path with
+           --glvnd-egl-config-path.
+
+Easy solution:
+
+.. code-block:: shell
+
+  sudo apt install build-essential libglvnd-dev pkg-config
+
+We now progress a little farther and get this warning: ``WARNING: Failed to delete some directories. See /var/log/nvidia-installer.log for details.``.
+I'll ignore this warning for now...
+It completes successfully!
+Now to reboot...
+
+And... it seems to have worked! ``Driver Version: 535.113.01   CUDA Version: 12.2`` yay!
+
+Well, this driver seems to work just as well as the 545 driver I had installed, and this is more glitchy when I put my laptop to sleep.
+Maybe I need to install some package that helps Pop!_OS interact better with these drivers, but that's a problem for future me.
+I'll likely remove these drivers and try installing from the official Pop!_OS repos, and if that 535 driver still doesn't work well, I guess I'll go back to 545.

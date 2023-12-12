@@ -21,3 +21,4 @@ Tech
   2023-10-new-laptop
   2023-10-bits
   2023-11-bits
+  2023-12-bits
