@@ -65,3 +65,82 @@ And... it seems to have worked! ``Driver Version: 535.113.01   CUDA Version: 12.
 Well, this driver seems to work just as well as the 545 driver I had installed, and this is more glitchy when I put my laptop to sleep.
 Maybe I need to install some package that helps Pop!_OS interact better with these drivers, but that's a problem for future me.
 I'll likely remove these drivers and try installing from the official Pop!_OS repos, and if that 535 driver still doesn't work well, I guess I'll go back to 545.
+
+Uninstalling these drivers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: shell
+
+  # show installed drivers:
+  dpkg -l | grep -i nvidia
+
+  sudo apt-get remove --purge '^nvidia-.*' 'libnvidia*'
+  sudo rm /etc/X11/xorg.conf
+  # or instead
+  sudo nvidia-uninstall
+
+  sudo reboot
+
+
+December 12 - Updating Server
+--------------------------------
+
+Followed this guide to update shork: https://linuxiac.com/how-to-upgrade-to-debian-12-from-debian-11/
+
+I eventually ran into a problem where even basic docker compose commands took forever.
+I found that this might be the solution: https://stackoverflow.com/a/68172225/5434860
+
+.. code-block:: shell
+
+  # if this is a value less than 1000,
+  cat /proc/sys/kernel/random/entropy_avail
+  # then a simple fix is this:
+  apt install haveged
+
+Attempting to run this showed me that I have broken NVIDIA dependencies, which might mean that the slow docker compose commands is just a symptom of a bigger problem.
+I fix the broken packages, reboot, then install haveged, then reboot, and ``docker compose up -d`` is still as slow as ever.
+My entropy_avail also did not increase.
+I just down'd most of my docker containers and then up'd them again and that seemed to fix it.
+
+.. note::
+
+  (Update) docker compose was slow because my system was still booting up (I think)
+
+I also had the problem of transcoding not working.
+I tried editing ``/etc/pve/lxc/100.conf`` again to update the numbers, but that didn't fix it.
+I install ``libcuda1`` on my Proxmox host, and a CUDA version is reported in ``nvidia-smi`` now (yay).
+CUDA is not reported on shork, so I'll install that on shork too.
+
+Well, installing CUDA didn't help. Maybe I'll remove that later.
+
+I have a couple of possible problems relating to 525.147.05:
+
+* https://www.reddit.com/r/debian/comments/187rqel/nvidia_525147051_driver_update_issues/
+* https://www.reddit.com/r/PleX/comments/10rycgf/hw_transcoding_nvidia_cuda_error_not_permitted/
+* https://forums.plex.tv/t/nvidia-hardware-acceleration-inconsistently-working-with-web-streaming/828463
+
+None of those help...
+But here are some logs:
+
+.. code-block::
+
+  Dec 13, 2023 03:33:59.572 [139818227186488] ERROR - [Req#14d/Transcode] [FFMPEG] - Cannot load libnvidia-encode.so.1
+  Dec 13, 2023 03:33:59.572 [139818227186488] ERROR - [Req#14d/Transcode] [FFMPEG] - The minimum required Nvidia driver for nvenc is 455.28 or newer
+  Dec 13, 2023 03:33:59.597 [139818227186488] WARN - [Req#14d/Transcode] Codecs: avcodec_open2 returned -1 for encoder 'h264_nvenc'
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] The Whole Nine Yards - video.bitrate limitation applies: 26181 > 2000
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] MDE: Cannot direct stream video stream due to profile or setting limitations
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] Codecs: testing h264 (decoder) with hwdevice vaapi
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] Codecs: hardware transcoding: testing API vaapi for device '' ()
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] Codecs: hardware transcoding: opening hw device failed - probably not supported by this system, error: Generic error in an external library
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] Could not create hardware context for h264
+  Dec 13, 2023 03:33:59.597 [139818227186488] DEBUG - [Req#14d/Transcode] Codecs: testing h264 (decoder) with hwdevice nvdec
+  Dec 13, 2023 03:33:59.598 [139818227186488] DEBUG - [Req#14d/Transcode] Codecs: hardware transcoding: testing API nvdec for device '' ()
+
+Now we have some other links to check out:
+
+* https://www.reddit.com/r/debian/comments/kylpns/obs_studio_with_nvenc_using_rtx2060_on_debian_11/
+
+  * Makes me think I should try ``sudo apt install nvidia-driver nvidia-cuda-toolkit libnvidia-encode1``
+
+Sure enough, installing either ``nvidia-cuda-toolkit`` or ``libnvidia-encode1`` made it work!
+Likely libnvidia-encode1, as the log message references that.
