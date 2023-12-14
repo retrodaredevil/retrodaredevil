@@ -555,3 +555,27 @@ Now I run ``sudo kernelstub --add-options "acpi=off"`` and confirm that the opti
 After some more research, this Q and A (https://access.redhat.com/solutions/58790) makes me think that
 ACPI is pretty much necessary for a laptop to be functional as a laptop with suspend functionality.
 I think I won't try to boot with ACPI disabled.
+
+Configuring Screen Lock and Blank Delays
+-------------------------------------------
+
+Since NVIDIA drivers are weird, I made these changes:
+
+* Power
+
+  * Screen Blank: Never
+  * Automatic Suspend
+
+    * Plugged in: Delay: 2 hours
+
+I couldn't figure out how to stop the screen from going blank right after locking the computer, though.
+
+Middle click lower window
+--------------------------
+
+With gnome tweaks installed, go to Window Titlebars > Titlebar Actions > Middle-Click: Lower.
+
+Because of this, I prefer to have things like Firefox and IntelliJ have the system title bar.
+On Firefox, right click on title bar, then select "Customize Toolbar". In the bottom left, select "Title Bar".
+
+For IntelliJ: Appearance & Behavior > Appearance > UI Options > "Merge main menu with window title": Uncheck this
