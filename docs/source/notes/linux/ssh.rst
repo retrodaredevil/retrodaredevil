@@ -13,3 +13,20 @@ SSH Tunnels
 ------------
 
 There are many ways to use tunnels. This blog post describes it very well: https://iximiuz.com/en/posts/ssh-tunnels/.
+
+
+Mosh
+-----
+
+Mosh is a great application to use with SSH to make your SSH sessions more stable.
+
+UTF-8 locale needed
+^^^^^^^^^^^^^^^^^^^^^^
+
+If you get this error, you likely need to run this on the server you are trying to access:
+
+.. code-block::
+
+  sudo apt update && sudo apt install locales || sudo dpkg-reconfigure locales
+
+See my answer here: https://unix.stackexchange.com/a/765013/591317

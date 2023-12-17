@@ -144,3 +144,13 @@ Now we have some other links to check out:
 
 Sure enough, installing either ``nvidia-cuda-toolkit`` or ``libnvidia-encode1`` made it work!
 Likely libnvidia-encode1, as the log message references that.
+
+December 14 - Proxmox VM with Audio Passthrough
+-------------------------------------------------
+
+I created a pretty simple Debian 12 VM.
+Important thing to note is that to use the SPICE audio driver, the display also needs to be set to use SPICE (https://forum.proxmox.com/threads/audio-could-not-init-spice-audio-driver.125589/).
+Then I need to run ``sudo apt install spice-vdagent``.
+Upon reboot that service seemed to be running, but no matter which audio device I choose (``ich9-intel-hda``, ``intel-hda``, ``AC97``), none worked.
+I looked at documentation here: https://pve.proxmox.com/wiki/SPICE#Using_Audio but it didn't help me.
+I'm not even sure if SPICE is designed for audio passthrough.
