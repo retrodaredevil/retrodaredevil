@@ -154,3 +154,26 @@ Then I need to run ``sudo apt install spice-vdagent``.
 Upon reboot that service seemed to be running, but no matter which audio device I choose (``ich9-intel-hda``, ``intel-hda``, ``AC97``), none worked.
 I looked at documentation here: https://pve.proxmox.com/wiki/SPICE#Using_Audio but it didn't help me.
 I'm not even sure if SPICE is designed for audio passthrough.
+
+I did not end up being successful with this, which is too bad.
+
+December 17 - Updating my Modded 3DS
+---------------------------------------
+
+I have a modded 3DS with Luma3DS v7.1.
+It seems to update, I need to follow these steps: https://gbatemp.net/threads/release-luma-updater.471739/
+which involves me updating boot9strap.
+That pretty much covered it perfectly.
+
+Now I am going to upgrade the SD card.
+I have to use FAT32 and nothing else.
+More info here: https://www.reddit.com/r/3DS/wiki/sdcard/
+
+December 18 - Increasing CT Volume Size in Proxmox
+------------------------------------------------------
+
+If you need a CT volume to have an increase in size, look here: https://forum.proxmox.com/threads/how-to-increase-the-size-of-proxmox-lxc-container.119453/
+
+.. code-block:: shell
+
+  pct resize 100 rootfs 250G

@@ -8,4 +8,5 @@ Links
   pc/index
   docker/index
   pdf/index
+  console-modding/index
   misc/index
