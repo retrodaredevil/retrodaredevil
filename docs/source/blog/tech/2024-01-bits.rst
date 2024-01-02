@@ -1,0 +1,94 @@
+January 2024 Bits
+=======================
+
+
+January 1 - 3D movies on my 3DS
+-----------------------------------
+
+3D Movie Viewer
+^^^^^^^^^^^^^^^^^
+
+The New 3DS comes with a "3D Movie Viewer" application that is able to play moflex files,
+but I cannot find any more information about this software.
+Searching for converting 3D video to moflex mostly comes up with tutorials on how to use Mobiclip.
+I don't really want to try to figure out how to make that work.
+It's not really worth it at that point.
+The video also has to be in a small format - 400x240, or I guess 800x240 if you include both left and right channels.
+
+I'm not going to continue with this, but you can find some movies already formatted correctly here: https://3ds-cia.fandom.com/wiki/Movies/TV_Cias
+
+References:
+
+* https://gbatemp.net/threads/converting-3d-videos-to-moflex.631644/
+* https://gbatemp.net/threads/converting-3d-videos-to-moflex.434254/
+
+Video player for 3DS (homebrew software)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I have a modded 3DS and one of the applications I installed is "Video player for 3DS".
+First I need to get some 3D movies.
+
+I got a 3D movie, and I will need to convert it into a format that will work.
+I will follow https://github.com/Core-2-Extreme/Video_player_for_3DS#prepare-videos-advanced-users
+which links us to https://gbatemp.net/threads/release-video-player-for-3ds.586094/page-10#post-9575227
+I will use the hardware accelerated version.
+I changed all ``\`` to ``/`` to work on Linux, although I think it may have worked anyway without that change.
+Notice the typo of ``ight.mkv`` needs to be changed to ``right.mkv``.
+Notice the typo of ``r-c:v`` needs to be ``-c:v`` (this looks like a copy-paste error).
+
+.. code-block:: shell
+
+  # Not hardware accelerated:
+  ffmpeg -i INPUT -vf scale=852:240:flags=neighbor scaled.mkv
+    && ffmpeg -i scaled.mkv -filter_complex "split[l][r];[l]stereo3d=sbsl:ml[left];[r]stereo3d=sbsl:mr[right]" -map [left] -map 0:a -c:a copy left.mkv -map [right] -map 0:a -c:a copy right.mkv \
+    && mkdir 1 \
+    && mkdir 2 \
+    && ffmpeg -to 1:30:00 -i right.mkv -c:v copy -c:a copy .\1\right.mkv \
+    && ffmpeg -to 1:30:00 -i left.mkv -c:v copy -c:a copy .\1\left.mkv \
+    && ffmpeg -ss 1:30:00 -to 3:00:00 -i right.mkv -c:v copy -c:a copy .\2\right.mkv \
+    && ffmpeg -ss 1:30:00 -to 3:00:00 -i left.mkv -c:v copy -c:a copy .\2\left.mkv \
+    && ffmpeg -i .\1\left.mkv -i .\1\right.mkv -map 0:v:0 -map 0:a:0 -map 1:v:0 -vcodec mjpeg -s 426x240 -b:v 3M -ac 2 movie1.avi \
+    && ffmpeg -i .\2\left.mkv -i .\2\right.mkv -map 0:v:0 -map 0:a:0 -map 1:v:0 -vcodec mjpeg -s 426x240 -b:v 3M -ac 2 movie2.avi
+  # Hardware accelerated:
+  ffmpeg -i '../Avatar 3d (2009) HSBS BrRip x264 - YFIY.mp4' -vf scale=800:240:flags=neighbor  -c:v h264_nvenc -maxrate 100M -b:v 12M -minrate 6M scaled.mkv \
+    && ffmpeg -i scaled.mkv -filter_complex "split[l][r];[l]stereo3d=sbsl:ml[left];[r]stereo3d=sbsl:mr[right]" -map [left] -map 0:a -c:a copy -c:v h264_nvenc -maxrate 100M -b:v 12M -minrate 6M left.mkv -map [right] -map 0:a -c:a copy -c:v h264_nvenc -maxrate 100M -b:v 12M -minrate 6M right.mkv \
+    && mkdir 1 \
+    && mkdir 2 \
+    && ffmpeg -to 1:30:00 -i right.mkv -c:v copy -c:a copy ./1/right.mkv \
+    && ffmpeg -to 1:30:00 -i left.mkv -c:v copy -c:a copy ./1/left.mkv \
+    && ffmpeg -ss 1:30:00 -i right.mkv -c:v copy -c:a copy ./2/right.mkv \
+    && ffmpeg -ss 1:30:00 -i left.mkv -c:v copy -c:a copy ./2/left.mkv \
+    && ffmpeg -i ./1/left.mkv -i ./1/right.mkv -map 0:v:0 -map 0:a:0 -map 1:v:0 -vcodec mjpeg -b:v 3M -ac 2 movie1.avi \
+    && ffmpeg -i ./2/left.mkv -i ./2/right.mkv -map 0:v:0 -map 0:a:0 -map 1:v:0 -vcodec mjpeg -b:v 3M -ac 2 movie2.avi
+
+After we are done with that, we have two files: ``movie1.avi`` and ``movie2.avi``.
+It's like this to overcome the FAT32 filesize limitation so we can still have decent looking movies.
+Notice we use h264 encoding because that has the best benchmark.
+
+Open ``movie1.avi`` in the "Video player for 3DS" and it works! Mostly.
+The video is in 3D, but it is squished.
+Remember that select gets you full screen, but will not fix a video that is "squished".
+My video ended up being "squished", but I think that's because of my input file.
+
+References:
+
+* Video Player for 3DS
+
+  * https://gbatemp.net/threads/release-video-player-for-3ds.586094/
+  * https://github.com/Core-2-Extreme/Video_player_for_3DS
+  * https://www.gamebrew.org/wiki/Video_player_3DS
+
+* Conversion
+
+  * https://gbatemp.net/threads/release-video-player-for-3ds.586094/page-10#post-9575227
+
+
+
+Automating Movie Downloads - 3D Movie Radarr Instance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When most people want to keep multiple versions of a particular movie, they will make multiple Radarr instances.
+I will add this profile to it: https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#3d
+
+I'll likely come back to this in the future, as it would also be cool to automate the conversion of these files using the command I described above.
+
