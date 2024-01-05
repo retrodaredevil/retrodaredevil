@@ -4,6 +4,7 @@ Links
 .. toctree::
 
   dev/index
+  text/index
   graphic/index
   pc/index
   docker/index
