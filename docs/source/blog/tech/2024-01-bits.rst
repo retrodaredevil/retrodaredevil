@@ -92,3 +92,14 @@ I will add this profile to it: https://trash-guides.info/Radarr/Radarr-collectio
 
 I'll likely come back to this in the future, as it would also be cool to automate the conversion of these files using the command I described above.
 
+January 18 - Laptop Monitor Refresh Rate Reset after Reboot
+------------------------------------------------------------
+
+This issue was pretty easy to solve:
+
+.. code-block::
+
+  gsettings set com.system76.hidpi enable false
+
+(Thanks https://www.reddit.com/r/pop_os/comments/u6wvxw/comment/i5f1dxw/)
+
