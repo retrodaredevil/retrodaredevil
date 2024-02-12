@@ -20,6 +20,12 @@ batterypi (2023-?) (Authentication and Signing)
 
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIIjWVU09hY8e23kaIojQPr9ygipsakxWkI1aj6y/YVToKXQKkFCD80MWvyn5EHrExpCFd2G4AmpFHjlJ7hKkLl5eBDiUeT9RENNhFsYfl+anZLG2wu5e7MvpwXzHITvgyuD2FpnmdscXKdUV3n58wY1kRnTpmmq+T69h0apOrym+7ovyAzFaEL36udtyjYfHBd0VyWixkkQ/vE4fgsYAfofN0CHbDlGQjpl8QpArEKcFObVfcDAG2vvLPBT4zOYkwHAa7OABK21fuHypOW79HmgDl+NB7Jf3VovvuzAwb+EG3STVFwHC4Vu4g9u6IBCQjO3mAIQgcRFQ7USUd9YPxLDXEF+uM8hEVBrjwTA8cFWvPmpsBobn5iRo0LcWyanwHwNl/D/2KmJK6aIvM0YgLV72bMg4ib2UZWCcAEbcUJkbSfmLVrDyz0VjI5G6FwZkU8raYQGeaGp/rRpgZp9sPx1njZFYzENg8SxJbEQHCXk+eLSzaCQPkFiOkhRu+wAE= lavender@batterypi
 
+nasplex (2023-?) (Authentication and Signing) (First usage in March 2023) (Signing as of 2024-02-11)
+
+.. code-block::
+
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDVcGHs4jjfqfpuKG5hLc3O1KrpDLzC6P/yGPKRqBhl1fWy/lNFxP/A62quSRcg+6WXvkYVlxi5wS+EBseaZVI6aWAW+mbDPW18FSWRnigwUr8a6oj9MmZU+QVa77hIhwFp2nux1xYQUZ3RAit/bEV4h/ZqAqmqmxhOGAdxKG1VUScy/r1rVq2Gkaed3pJOlCF0TXBhXNf+wxhbFdNt/BhFM/ZnELdCuz5p5yNa3LbV1cYHmX2rlKbXM5jykpunFoRNgBEDbbWxhHFLBzAfgbqo350cofI++fKh1Kg9UqtYpdz/IEytuIzap0U62his0Ak357PaqjfvZMuFwgZLVnM2DMi50ZAdtduHmtmIgcu6h5w2liSXZTKvoufsh88Qo8gneK6rP+XoQWPichXOeX8lKIgEmzH4t7WHvUiTtXV8WDPrShMdmoLQ8DB/8EKl31+GO74wGYkAbcWQqagTtUPiqaY6WdcOfJcrn8A0g8kvKbZL+grFS/JeJ7HAEz/W2XU= lavender@nasplex
+
 Retired Keys
 ^^^^^^^^^^^^
 
