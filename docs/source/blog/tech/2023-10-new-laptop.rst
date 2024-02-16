@@ -224,6 +224,7 @@ I setup Windows 11 with a local account by attempting to sign in with the email 
     * ``winget install --id=Discord.Discord -e``
     * ``winget install --id=Mojang.MinecraftLauncher -e``
     * ``winget install --id=Plex.Plexamp -e``
+    * ``winget install --id=Ubisoft.Connect  -e``
 
   * Find my drivers: https://www.nvidia.com/download/index.aspx?lang=en-us
 
@@ -251,6 +252,10 @@ I setup Windows 11 with a local account by attempting to sign in with the email 
   * Set terminal to Git Bash
 
     * Settings -> Tools -> Terminal
+
+* Epic Games Launcher
+
+  * Disable notifications by going to Settings > Desktop Notifications
 
 ``.gitconfig`` in Windows
 ----------------------------
