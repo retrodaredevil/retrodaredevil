@@ -1,0 +1,62 @@
+March 2024 Bits
+==================
+
+
+March 23 - ZFS Error
+-----------------------
+
+I got a ZFS error. Documenting it here:
+
+.. code-block:: console
+
+  root@bigger-fish:~# zpool status -v manta
+    pool: manta
+   state: ONLINE
+  status: One or more devices has experienced an error resulting in data
+    corruption.  Applications may be affected.
+  action: Restore the file in question if possible.  Otherwise restore the
+    entire pool from backup.
+     see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-8A
+    scan: scrub repaired 0B in 07:16:37 with 1 errors on Sun Mar 10 08:40:39 2024
+  config:
+
+    NAME                                 STATE     READ WRITE CKSUM
+    manta                                ONLINE       0     0     0
+      raidz1-0                           ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR15840L  ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR157MTZ  ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR156V3D  ONLINE       0     0     0
+
+  errors: Permanent errors have been detected in the following files:
+
+          /manta/subvol-100-disk-0/media/public/movies/The Darkest Minds (2018)/The.Darkest.Minds.2018.1080p.BluRay.x264-[YTS.AM].mp4
+
+After deleting the file, it is replaced with ``manta/subvol-100-disk-0:<0x1ea>``.
+
+Now I run a ``zpool scrub manta``.
+The command completes, but the scrub is still in progress.
+I can see the progress by running ``zpool status -v manta``.
+
+After a while:
+
+.. code-block:: console
+
+  root@bigger-fish:~# zpool status -v manta
+    pool: manta
+   state: ONLINE
+  status: Some supported and requested features are not enabled on the pool.
+    The pool can still be used, but some features are unavailable.
+  action: Enable all features using 'zpool upgrade'. Once this is done,
+    the pool may no longer be accessible by software that does not support
+    the features. See zpool-features(7) for details.
+    scan: scrub repaired 0B in 07:35:13 with 0 errors on Sun Mar 24 05:03:34 2024
+  config:
+
+    NAME                                 STATE     READ WRITE CKSUM
+    manta                                ONLINE       0     0     0
+      raidz1-0                           ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR15840L  ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR157MTZ  ONLINE       0     0     0
+        ata-ST8000DM004-2U9188_ZR156V3D  ONLINE       0     0     0
+
+  errors: No known data errors
