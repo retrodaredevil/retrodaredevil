@@ -1,0 +1,144 @@
+April 2024 Bits
+===============
+
+
+April 7 - DNS Server
+----------------------
+
+I've tried out Pihole and Adguard Home before, but I want something that's a little bit easier to understand and backup configuration for.
+I'm looking at a few options:
+
+* https://technitium.com/dns/
+
+  * Uses a Web UI for configuration
+
+* https://github.com/0xERR0R/blocky
+
+  * Grafana dashboard: https://github.com/0xERR0R/blocky-grafana-prometheus-example
+  * Supports DNS over HTTPS server
+  * Blocking can be temporarily disabled via CLI: https://0xerr0r.github.io/blocky/v0.23/interfaces/
+
+* https://github.com/Cottand/leng
+
+  * A comparison: https://cottand.github.io/leng/AlternativesComparison.html
+  * Supports DNS over HTTPS server
+  * No premade Grafana dashboard, but has metrics: https://cottand.github.io/leng/Prometheus-Metrics.html
+
+Both blocky and leng use a config file for configuration, but blocky seems to have a way to disable ad blocking temporarily,
+which is a requirement.
+
+There's also now a Hacker News thread on this: https://news.ycombinator.com/item?id=39968103
+Some of the comments mention using https://oisd.nl/ as the blocklist, as that seems to break the least number of things.
+
+
+April 8 - Downgrade NVIDIA Drivers
+-----------------------------------
+
+Well, I did it again: I upgraded my NVIDIA drivers.
+Big mistake. Huge.
+
+I'm currently running 550.67, and I think I will downgrade to the latest 535 driver: 535.161.07.
+I had 535.113.01 installed a while back, and that worked great, which is why I want to stick with the 535 series.
+
+I will follow this:
+
+.. code-block:: shell
+
+  sudo apt purge ~nnvidia
+  sudo apt install nvidia-driver-535-server
+
+Might as well enable Wayland support while we're at it
+
+.. code-block:: shell
+
+  echo 'options nvidia_drm modeset=1' | sudo tee /etc/modprobe.d/zz-nvidia-modeset.conf
+  sudo vi /etc/gdm3/custom.conf  # enable wayland
+
+Now ``flatpak update && sudo reboot``.
+
+The most important thing that we've done is remove ``system76-driver-nvidia``,
+which seems to automatically update the NVIDIA fairly frequently.
+
+As I expected, 535.161.07 is now installed!
+
+.. code-block::
+
+  lavender@lavender-legion:~$ nvidia-smi
+  Mon Apr  8 20:29:32 2024
+  +---------------------------------------------------------------------------------------+
+  | NVIDIA-SMI 535.161.07             Driver Version: 535.161.07   CUDA Version: 12.2     |
+  |-----------------------------------------+----------------------+----------------------+
+  | GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+  | Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+  |                                         |                      |               MIG M. |
+  |=========================================+======================+======================|
+  |   0  NVIDIA GeForce RTX 4070 ...    Off | 00000000:01:00.0  On |                  N/A |
+  | N/A   44C    P4              13W /  55W |   2161MiB /  8188MiB |     29%      Default |
+  |                                         |                      |                  N/A |
+  +-----------------------------------------+----------------------+----------------------+
+
+  +---------------------------------------------------------------------------------------+
+  | Processes:                                                                            |
+  |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+  |        ID   ID                                                             Usage      |
+  |=======================================================================================|
+  |    0   N/A  N/A      3669      G   /usr/lib/xorg/Xorg                         1393MiB |
+  |    0   N/A  N/A      4034      G   /usr/bin/gnome-shell                        590MiB |
+  +---------------------------------------------------------------------------------------+
+
+It's good to finally be back on stable NVIDIA drivers.
+Now I don't have to unplug my third monitor before suspending my computer (545 and 550),
+and unplugging my monitor and plugging it back in no longer causes the system to only support extremely basic graphics (550).
+
+Update (April 10): It seems that sometimes after plugging external monitors back in, my refresh rates get locked at 60 and fractional scaling does not work.
+We'll have to see if this continues, but I didn't expect this to happen since the last time I used a 535 driver it worked about as perfectly as I could ask for.
+
+April 10 - Choosing an apcupsd prometheus exporter
+----------------------------------------
+
+I documented installing apcupsd a while ago (:ref:`2023-08-14-apcupsd`).
+However, I have not been collecting metrics any of this time.
+Now that I have a decent Prometheus setup going, it makes sense to collect metrics from this.
+
+I have a few options:
+
+* https://github.com/jirutka/apcupsd-snmp + https://github.com/prometheus/snmp_exporter + https://grafana.com/grafana/dashboards/12340-ups/
+
+  * Fairly outdated
+
+* https://github.com/3VLINC/apcupsd-prometheus
+
+  * Updated June 8, 2023
+  * Supports docker - published on Docker Hub
+  * Written in JavaScript
+
+* https://github.com/io-developer/prom-apcupsd-exporter
+
+  * Updated February 5, 2024
+  * Supports docker - published on Docker Hub
+  * Written in Go
+
+* https://github.com/mdlayher/apcupsd_exporter
+
+  * Updated March 14, 2022
+  * No docker support
+
+    * Third party support: https://hub.docker.com/r/jangrewe/apcupsd-exporter
+
+  * Written in Go
+  * https://brendonmatheson.com/2020/02/20/monitoring-apc-ups-units-with-prometheus-on-raspberry-pi.html
+
+* https://github.com/damomurf/apcupsd-exporter + https://grafana.com/grafana/dashboards/13525-apc-ups/
+
+  * Updated May 19, 2019
+  * No docker support
+  * Written in Go
+
+If I wasn't running Proxmox, I would probably choose whichever one has the best docker support,
+but figuring out which one to choose might be difficult now as I don't have docker installed inside of Proxmox.
+I'll have to think on it.
+
+Additionally, I want to eventually look into these things for monitoring Proxmox:
+
+* https://www.sobyte.net/post/2022-09/proxmox/
+* https://grafana.com/grafana/dashboards/10347-proxmox-via-prometheus/

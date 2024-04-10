@@ -10,9 +10,11 @@ Many times, these notes are informal and incomplete.
   linux/index
   docker/index
   electrical/index
+  open-source-applications
   keys
   wii-mod
   3ds-mod
   react
   steam
   simutrans
+  i-dislike-go

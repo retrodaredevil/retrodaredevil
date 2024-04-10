@@ -1,4 +1,4 @@
-March 2024 - I dislike Go
+I dislike Go
 ==============================
 
 This page is a work in progress blog post about all the things I hate about Go.
@@ -79,6 +79,8 @@ Complaints
 
       * This is only a con in the developer experience. You aren't losing any type safety here, I just don't like how it feels personally.
 
+  * Interfaces cannot have "default" functions - you cannot create receiver functions for an interface type
+
 * Instanceof
 
   * Many languages support instanceof. In Go you have a couple of options, but none of them give the ease of use that something like instanceof does.
@@ -92,3 +94,12 @@ Complaints
 
   * ``testdata`` directory is special and not well documented: https://github.com/golang/go/issues/14715
 
+* (Lack of) collection types
+
+  * There is no set data structure: https://stackoverflow.com/questions/34018908/golang-why-dont-we-have-a-set-datastructure
+
+* Functions
+
+  * No function overloading!
+
+    * A workaround is that you can generic with union types, however this has the downside that it will not work for receiver functions, because receiver functions cannot have generics
