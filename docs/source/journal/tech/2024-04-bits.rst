@@ -94,7 +94,7 @@ Update (April 10): It seems that sometimes after plugging external monitors back
 We'll have to see if this continues, but I didn't expect this to happen since the last time I used a 535 driver it worked about as perfectly as I could ask for.
 
 April 10 - Choosing an apcupsd prometheus exporter
-----------------------------------------
+-----------------------------------------------------
 
 I documented installing apcupsd a while ago (:ref:`2023-08-14-apcupsd`).
 However, I have not been collecting metrics any of this time.
@@ -142,3 +142,18 @@ Additionally, I want to eventually look into these things for monitoring Proxmox
 
 * https://www.sobyte.net/post/2022-09/proxmox/
 * https://grafana.com/grafana/dashboards/10347-proxmox-via-prometheus/
+
+April 12 - A domain for my internal services
+----------------------------------------------
+
+I'm planning on self-hosting some applications on my laptop,
+and I want to access them via a domain name and a self-signed certificate.
+The domain I use will have to not be in use by anything else, so it's best I find a top level domain I can use.
+
+* https://www.icann.org/en/public-comment/proceeding/proposed-top-level-domain-string-for-private-use-24-01-2024
+
+  * Recommends the use of ``.internal``
+
+* https://datatracker.ietf.org/doc/html/rfc8375
+
+  * Describes the use of ``home.arpa``.

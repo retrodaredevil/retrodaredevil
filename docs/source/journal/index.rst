@@ -1,5 +1,5 @@
-Blog
-=====
+Journal
+========
 
 .. toctree::
 

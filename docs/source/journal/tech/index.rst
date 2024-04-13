@@ -1,10 +1,12 @@
 Tech
 =====
 
+Contains journal entries about the random stuff I'm doing.
+These are not as polished as a formal blog post.
 
 .. toctree::
   :maxdepth: 2
-  :caption: Tech Blog
+  :caption: Tech Journal
 
   2023-05-building-new-server-running-linux
   2023-05-bits

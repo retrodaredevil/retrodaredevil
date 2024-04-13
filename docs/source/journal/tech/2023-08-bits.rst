@@ -217,6 +217,7 @@ I increased the container's storage to 3GB as a temporary solution, rebooted and
 I now go to Settings > General Settings > Logs configuration > set Query logs rotation to 7 days and I now save and clear the query logs.
 
 .. _2023-08-14-apcupsd:
+
 August 14 - Setting up apcupsd for my UPS
 ------------------------------------------
 

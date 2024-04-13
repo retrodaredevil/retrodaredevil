@@ -13,7 +13,7 @@ Contents
 
 .. toctree::
 
-  blog/index
+  journal/index
   tutorial/index
   notes/index
   link/index
@@ -26,7 +26,6 @@ Contents
 
   SolarThing <https://solarthing.readthedocs.org/>
   Wild Mountain Farms <https://wildmountainfarms.readthedocs.org/>
-  Graylog <https://solarthing.readthedocs.io/en/latest/logging.html#setting-up-graylog>
 
 
 .. toctree::
