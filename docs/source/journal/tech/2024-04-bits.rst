@@ -157,3 +157,92 @@ The domain I use will have to not be in use by anything else, so it's best I fin
 * https://datatracker.ietf.org/doc/html/rfc8375
 
   * Describes the use of ``home.arpa``.
+
+April 13 - Secure connections between remote docker containers
+----------------------------------------------------------------
+
+In all of my docker services that I manage,
+I try to make them easy to understand and I also try to assume that anything can become compromised at any time,
+so not everything should be able to communicate with each other.
+I knew I wanted to setup WireGuard. I looked at this post: https://www.procustodibus.com/blog/2022/06/multi-hop-wireguard/
+but I soon realized that I didn't need something that complicated.
+
+I set up a wireguard container using ``cmulk/wireguard-docker:buster`` (https://hub.docker.com/r/cmulk/wireguard-docker) today.
+I choose it because it allowed me to manually configure my WireGuard configuration file and it didn't try to do anything via environment variables.
+I even configured ALLOWED_IPS on both ends to be able to route local network traffic back and forth.
+That's cool, but my actual use case is the docker services on each device need to communicate with each other.
+Now, I could make everything have a ``network_mode: container:wireguard-container``,
+but I don't want all of my containers to have the same IP address, thus sharing ports and able to communicate with one another through ``localhost``.
+It's possible to set up some iptables rules to route specific subnets through a specific gateway (the wireguard container in my case).
+But I don't really want to do that.
+I want something that's easy to setup and maintain.
+
+So, I thought about a simple SOCKS5 proxy.
+The SOCKS5 proxy can have a network mode that is the WireGuard container.
+Once I do that, now I just have to get some container on the same network as my WireGuard container and it will have access to the proxy.
+The question is which proxy to use.
+There are plenty of proxies that don't even require the use of a WireGuard connection.
+`Shadowsocks <https://shadowsocks.org/doc/what-is-shadowsocks.html>`_ seems to have its own tunnel built into it.
+If I used that I might as well not use the WireGuard network.
+It looks like `socks5-server <https://github.com/serjs/socks5-server>`_ () is going to be my best bet.
+A simple test of running ``docker run -it --rm -p 1080:1080 serjs/go-socks5-proxy`` worked perfectly without any configuration.
+If I ever need to come back to choose a different container, I might consider `docker-socks-tunnel <https://github.com/httptoolkit/docker-socks-tunnel>`_, which uses `Microsocks <https://github.com/rofl0r/microsocks>`_ under the hood.
+
+Eventually I get everything setup and I get this:
+
+.. code-block:: console
+
+  root@ed03976dcfd4:/usr/share/grafana# curl -x socks5://wireguard-gold:1080 192.168.210.3:9090
+  <a href="/graph">Found</a>.
+
+  root@ed03976dcfd4:/usr/share/grafana# curl -x socks5://wireguard-gold:1080 prometheus.gold.lavtop.internal:9090
+  <a href="/graph">Found</a>.
+
+Both of those work! Yay!
+Now that I can do that from within the Grafana container, I need to set up a SOCKS5 proxy for Grafana: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/proxy/
+
+Grafana seems to recommend that the proxy be secure, but this is all inside docker networks, so I can just set allow_insecure to true.
+Now I have this:
+
+.. code-block:: ini
+
+  [secure_socks_datasource_proxy]
+  enabled = true
+  ; root_ca_cert =
+  ; client_key =
+  ; client_cert =
+  server_name = wireguard-gold
+  # The address of the socks5 proxy datasources should connect to
+  proxy_address = wireguard-gold:1080
+  allow_insecure = true
+  # default of show_ui is true, but specify anyway
+  show_ui = true
+
+Now I added this inside of an existing prometheus.yml file for provisioning:
+
+.. code-block:: yaml
+
+  apiVersion: 1
+  datasources:
+    # ...
+    - name: 'Lavtop Prometheus'
+      type: prometheus
+      access: proxy
+      orgId: 1
+      uid: 98855a68-8eb8-41a6-a6a0-df8968f70ab4
+      url: http://prometheus.gold.lavtop.internal:9090
+      jsonData:
+        enableSecureSocksProxy: true
+      editable: true
+
+The only problem is that is seems that Grafana is also letting the proxy resolve the hostname ``prometheus.gold.lavtop.internal``.
+Not a huge deal. It just means I need to add that as an extra_host somewhere else.
+I tried my server's WireGuard container. That didn't work. Even the pings to that hostname didn't work.
+I tried my server's proxy container, but I get ``conflicting options: custom host-to-IP mapping and the network mode``.
+Hmm. Well, I guess I'll just have to hard code to 192.168.210.3 for now. I'll just have to change that URL parameter above.
+
+And... Success!
+Well, I finally got there after some tinkering.
+It's a bit weird that Grafana seems to only support a single SOCKS5 proxy.
+Maybe I'll have to create an issue about that.
+
