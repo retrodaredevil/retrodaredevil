@@ -246,3 +246,10 @@ Well, I finally got there after some tinkering.
 It's a bit weird that Grafana seems to only support a single SOCKS5 proxy.
 Maybe I'll have to create an issue about that.
 
+April 23 - DietPi Time Sync
+----------------------------
+
+BatteryPi had a power outage today, so I went in and configured its time sync to "Boot + Hourly"
+in dietpi-config > Advanced Options > Time sync mode
+
+https://dietpi.com/forum/t/wrong-time-after-power-off/3181/3
