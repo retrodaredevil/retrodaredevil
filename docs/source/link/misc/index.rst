@@ -5,3 +5,4 @@ Miscellaneous
 
   blogs
   docs
+  posts
