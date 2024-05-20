@@ -9,5 +9,6 @@ Dev
   Center of My Screen <https://centerofmyscreen.com/>
   curl to wget <https://curlconverter.com/wget/>
   WireGuard QR <https://www.wireguardconfig.com/qrcode>
+  SSL Certs <https://crt.sh/>
   arr
   proxmox
