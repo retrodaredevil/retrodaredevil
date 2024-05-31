@@ -1,0 +1,73 @@
+May 2024 Bits
+===============
+
+May 23 - Another DietPi Install
+-----------------------------------
+
+Setting Up WiFi on DietPi
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+https://dietpi.com/docs/install/#2-flash-the-dietpi-image
+
+It turns out, it's pretty simple to set up WiFi on DietPi by only having access to the SD card.
+
+Edit ``dietpi.txt`` in the boot partition of the SD card.
+
+.. code-block::
+
+  AUTO_SETUP_NET_WIFI_ENABLED=1
+  AUTO_SETUP_NET_WIFI_COUNTRY_CODE=US
+
+Now edit ``dietpi-wifi.txt``:
+
+.. code-block::
+
+
+  aWIFI_SSID[0]='TheRanch'
+  aWIFI_KEY[0]='xxx'
+  aWIFI_KEYMGR[0]='WPA-PSK'
+
+Now reboot and login with root:dietpi
+
+Additional Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Add a user:
+
+.. code-block:: shell
+
+  useradd --create-home --user-group --shell /usr/bin/bash --groups sudo,tty,dialout,video,docker,input lavender
+
+Notice that input is especially important here because when we launch firefox inside of ``~/.xinitrc``,
+we need permission to get inputs.
+
+Remember to use dietpi-config to:
+
+* Change freqency of time sync to 3 - "Boot + Hourly" (Under advanced options)
+* Change hostname in Security Options
+
+As I've done on previous installs:
+
+.. code-block:: shell
+
+  sudo apt install -y make stow net-tools vim iputils-tracepath traceroute curl wget git netcat-openbsd tmux tree man-db file htop gpg-agent rsync pwgen less
+
+
+5 inch RPi Display
+^^^^^^^^^^^^^^^^^^^^
+
+I need to get drivers for `5inch HDMI Display <http://www.lcdwiki.com/5inch_HDMI_Display>`_.
+
+Although this is a DietPi install, using https://github.com/goodtft/LCD-show
+and ``sudo ./LCD5-show`` seems to work fine even with a few errors printed to the console.
+
+Firefox Configuration
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Since we want to run Firefox without a desktop environment, we need to run a few commands.
+
+
+
+.. code-block:: shell
+
+  wget https://addons.mozilla.org/firefox/downloads/file/3938344/scroll_anywhere-9.2.xpi
