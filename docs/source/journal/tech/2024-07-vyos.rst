@@ -1,0 +1,312 @@
+July 2024 Setting Up VyOS as a Router
+========================================
+
+June 30 - Building VyOS
+-------------------------
+
+.. note::
+
+  Building the rolling release VyOS image is not strictly necessary because VyOS actually provides those images.
+
+`VyOS <https://github.com/vyos/vyos-build>`_ is router software I want to try out.
+I will use https://docs.vyos.io/en/latest/contributing/build-vyos.html to help me build it.
+
+I run these commands:
+
+.. code-block:: shell
+
+  docker pull vyos/vyos-build:current
+  git clone -b current --single-branch https://github.com/vyos/vyos-build
+  cd vyos-build
+  docker run --rm -it --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash
+
+From the container's bash shell:
+
+.. code-block:: shell
+
+  cd vyos-build
+  # you are now inside of /vyos/vyos-build
+  sudo make clean
+  sudo ./build-vyos-image generic --architecture amd64 --build-by "j.randomhacker@vyos.io"
+
+At the time of writing, 1.5 is not out yet, so ``vyos-build/build/vyos-1.5-rolling-202406301547-generic-amd64.iso`` is the image that is built.
+
+`Running on Proxmox <https://docs.vyos.io/en/latest/installation/virtual/proxmox.html>`_ has documentation for running on Proxmox.
+I parse the command ``qm create 200 --name vyos --memory 2048 --net0 virtio,bridge=vmbr0 --ide2 media=cdrom,file=local:iso/live-image-amd64.hybrid.iso --virtio0 local-lvm:15``
+and see that it wants 2GB RAM, and 15GB of storage.
+
+I tried giving it 4 cores, which resulted in 16 vCPUs, while my CPU only supports 12 (or 3 cores) (``TASK ERROR: MAX 12 vcpus allowed per VM on this node``).
+I don't usually create VMs often, so this is different from being able to choose between 1 and 12 CPUs.
+1 core and 1 socket is probably enough.
+
+I let it boot into to the installer (KVM console), login with ``vyos/vyos``, and then run ``install image``.
+I choose defaults, then shutdown the VM when it's done.
+I then remove the installation media and start the VM back up.
+
+Now I can follow the `Quick Start <https://docs.vyos.io/en/latest/quick-start.html>`_.
+
+Before I get into configuring, my set up, I want to understand how I want to set this up long term.
+I will eventually want to configure this `using Ansible <https://docs.vyos.io/en/latest/configexamples/ansible.html>`_.
+To do that, I first need to be able to access VyOS via SSH.
+The quick start covers this in `Hardening <https://docs.vyos.io/en/latest/quick-start.html#hardening>`_.
+We're going to come back to this once I actually have SSH access set up, and more importantly, being able to ping the thing itself!
+
+July 13 - Configuring VyOS and Proxmox Network Interfaces
+-----------------------------------------------------------
+
+Before we do this configuration, you'll probably want to be able to "copy paste".
+Well, this is almost as good. We're going to mount a drive to Proxmox, and then mount that drive in VyOS.
+
+First create a Hard Disk with a size of 1GB in the VyOS VM hardware configuration inside Proxmox.
+Then run these commands in the PVE shell.
+
+.. code-block:: shell
+
+  # In Proxmox
+  # NOTE make sure you get the `/dev/pve/vm-204-disk-1` right to correspond to your hard disk
+  mkfs.ext4 /dev/pve/vm-204-disk-1
+  mkdir /mnt/vm204disk1
+  mount /dev/pve/vm-204-disk-1 /mnt/vm204disk1
+
+
+Let's do some simple configuration now...
+
+.. code-block:: shell
+
+  configure
+
+  set interfaces ethernet eth0 address dhcp
+  set interfaces ethernet eth0 description 'OUTSIDE'
+  set interfaces ethernet eth1 address '192.168.44.1/24'
+  set interfaces ethernet eth1 description 'LAN'
+
+
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option default-router '192.168.44.1'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option name-server '192.168.44.1'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option domain-name 'vyos.net'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 lease '86400'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 range 0 start '192.168.44.100'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 range 0 stop '192.168.44.189'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 subnet-id '1'
+
+  set service dns forwarding cache-size '0'
+  set service dns forwarding listen-address '192.168.44.1'
+  set service dns forwarding allow-from '192.168.44.0/24'
+
+  set nat source rule 100 outbound-interface name 'eth0'
+  set nat source rule 100 source address '192.168.44.0/24'
+  set nat source rule 100 translation address masquerade
+
+Now to configure the firewall (https://docs.vyos.io/en/latest/quick-start.html#firewall)
+
+.. code-block:: shell
+
+  set firewall group interface-group WAN interface eth0
+  set firewall group interface-group LAN interface eth1
+  set firewall group network-group NET-INSIDE-v4 network '192.168.44.0/24'
+
+
+
+  # We do option 1
+  set firewall global-options state-policy established action accept
+  set firewall global-options state-policy related action accept
+  set firewall global-options state-policy invalid action drop
+
+
+
+  # block incoming traffic
+  set firewall ipv4 name OUTSIDE-IN default-action 'drop'
+
+  set firewall ipv4 forward filter rule 100 action jump
+  set firewall ipv4 forward filter rule 100 jump-target OUTSIDE-IN
+  set firewall ipv4 forward filter rule 100 inbound-interface group WAN
+  set firewall ipv4 forward filter rule 100 destination group network-group NET-INSIDE-v4
+  # By default, block traffic to router that isn't explicitly allowed
+  set firewall ipv4 input filter default-action 'drop'
+
+
+
+  # Allow management access (allowing SSH)
+  set firewall ipv4 name VyOS_MANAGEMENT default-action 'return'
+
+
+  set firewall ipv4 input filter rule 20 action jump
+  set firewall ipv4 input filter rule 20 jump-target VyOS_MANAGEMENT
+  set firewall ipv4 input filter rule 20 destination port 22
+  set firewall ipv4 input filter rule 20 protocol tcp
+
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 15 action 'accept'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 15 inbound-interface group 'LAN'
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 action 'drop'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 recent count 4
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 recent time minute
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 state new
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 inbound-interface group 'WAN'
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 action 'accept'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 state new
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 inbound-interface group 'WAN'
+
+
+
+  # Allow Access to services
+  set firewall ipv4 input filter rule 30 action 'accept'
+  set firewall ipv4 input filter rule 30 icmp type-name 'echo-request'
+  set firewall ipv4 input filter rule 30 protocol 'icmp'
+  set firewall ipv4 input filter rule 30 state new
+
+  set firewall ipv4 input filter rule 40 action 'accept'
+  set firewall ipv4 input filter rule 40 destination port '53'
+  set firewall ipv4 input filter rule 40 protocol 'tcp_udp'
+  set firewall ipv4 input filter rule 40 source group network-group NET-INSIDE-v4
+
+
+  set firewall ipv4 input filter rule 50 action 'accept'
+  set firewall ipv4 input filter rule 50 source address 127.0.0.0/8
+
+Put as much of that as you want to use in a file in the drive you just mounted,
+and then unmount the drive like so:
+
+.. code-block:: shell
+
+  # In Proxmox
+  umount /mnt/vm204disk1
+  # Deactivate the logical volume (note that your VM might need to be shut down for this to work)
+  lvchange -an /dev/pve/vm-204-disk-1
+
+Now, within the VM, we need to mount that drive.
+
+.. code-block:: shell
+
+  # In VyOS
+  sudo mkdir /mnt/tempdisk
+  # NOTE: verify /dev/sdb is correct by running `lsblk`
+  sudo mount /dev/sdb /mnt/newdisk
+
+You can copy that file over and run it after making sure you're in ``configure`` mode like this:
+
+.. code-block:: shell
+
+  . ./initial_config.sh
+
+I'm going to come back to `Hardening <https://docs.vyos.io/en/latest/quick-start.html#hardening>`_ later.
+For now, we can commit and save:
+
+.. code-block:: shell
+
+  commit
+  save
+
+Now, you should get an error message saying that ``Interface "eth1" does not exist!``.
+Let's create that now.
+
+In Proxmox, I'm going to set my ``/etc/network/interfaces`` to be this:
+
+.. code-block::
+
+  # network interface settings; autogenerated
+  # Please do NOT modify this file directly, unless you know what
+  # you're doing.
+  #
+  # If you want to manage parts of the network configuration manually,
+  # please utilize the 'source' or 'source-directory' directives to do
+  # so.
+  # PVE will preserve these directives, but will NOT read its network
+  # configuration from sourced files, so do not attempt to move any of
+  # the PVE managed interfaces into external files!
+
+  auto lo
+  iface lo inet loopback
+
+  iface eno1 inet manual
+  # eno1 is the built-in Ethernet port, and will be configured as a debug port below
+
+  iface enpxleftbottom inet manual
+  # enpxleftbottom  is the left (looking from the back) bottom Ethernet port - vmbr2wan  WAN
+
+  iface enpxlefttop inet manual
+  # enpxlefttop     is the left (looking from the back) top    Ethernet port - vmbr3lan1 LAN1
+
+  iface enpxrightbottom inet manual
+  # enpxrightbottom is the right(looking from the back) bottom Ethernet port - vmbr4lan2 LAN2
+
+  iface enpxrighttop inet manual
+  # enpxrighttop    is the right(looking from the back) top    Ethernet port - vmbr5lan3 LAN3
+
+  auto vmbr0
+  iface vmbr0 inet static
+    address 192.168.44.20/24
+    # NOTE: Uncomment gateway when you want this to be used for routing Proxmox's internet traffic
+    #gateway 192.168.44.1
+    dns-nameservers 1.1.1.1
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+  #internal LAN. All VMs and containers should default to this.
+
+  auto vmbr1debug
+  iface vmbr1debug inet dhcp
+    bridge-ports eno1
+    bridge-stp off
+    bridge-fd 0
+  #debug Proxmox port
+
+
+  auto vmbr2wan
+  iface vmbr2wan inet manual
+    bridge-ports enpxleftbottom
+    bridge-stp off
+    bridge-fd 0
+  #PCIe slot 0 Ethernet 0 - WAN port
+
+  auto vmbr3lan1
+  iface vmbr3lan1 inet manual
+    bridge-ports enpxlefttop
+    bridge-stp off
+    bridge-fd 0
+  #PCIe slot 0 Ethernet 1 - LAN1 port
+
+  auto vmbr4lan2
+  iface vmbr4lan2 inet manual
+    bridge-ports enpxrightbottom
+    bridge-stp off
+    bridge-fd 0
+  #PCIe slot 1 Ethernet 0 - LAN2 port
+
+
+  auto vmbr5lan3
+  iface vmbr5lan3 inet manual
+    bridge-ports enpxrighttop
+    bridge-stp off
+    bridge-fd 0
+  #PCIe slot 0 Ethernet 1 - LAN1 port
+
+
+Notice that vmbr1debug uses dhcp to get its IP address.
+This means that I should be able to plug the built-in Ethernet to some router's LAN and get access to it on that network
+if I ever screw anything up.
+
+.. note::
+
+  For reference: https://wiki.debian.org/BridgeNetworkConnections
+
+Now, those physical interfaces I referred to actually need to be setup correctly by creating some persistent rules.
+Edit ``/etc/udev/rules.d/70-persistent-net.rules``
+
+.. code-block:: shell
+
+  SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="a0:36:9f:09:51:66", NAME="enpxleftbottom"
+  SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="a0:36:9f:09:51:67", NAME="enpxlefttop"
+  SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="1c:86:0b:22:57:e6", NAME="enpxrightbottom"
+  SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="1c:86:0b:22:57:e7", NAME="enpxrighttop"
+
+I made up this ``enpx...`` naming convention, but it's somewhat similar to the default naming convention.
+After a reboot, you should see (kernel) log messages such as these in ``journalctl --since=today``:
+
+.. code-block::
+
+  igb 0000:03:00.0 enpxleftbottom: renamed from enp3s0f0
+  igb 0000:03:00.1 enpxlefttop: renamed from enp3s0f1
+  igb 0000:01:00.0 enpxrightbottom: renamed from enp1s0f0

@@ -16,6 +16,12 @@ Desktop Apps
 
   * https://flathub.org/apps/com.belmoussaoui.Authenticator
 
+* k3b: https://invent.kde.org/multimedia/k3b | https://github.com/KDE/k3b
+
+  * Burning optical media
+  * ``sudo apt install k3b``
+  * Alternative: https://gitlab.gnome.org/GNOME/brasero
+
 
 Android Apps
 -------------

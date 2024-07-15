@@ -66,8 +66,6 @@ Firefox Configuration
 
 Since we want to run Firefox without a desktop environment, we need to run a few commands.
 
-
-
 .. code-block:: shell
 
   wget https://addons.mozilla.org/firefox/downloads/file/3938344/scroll_anywhere-9.2.xpi

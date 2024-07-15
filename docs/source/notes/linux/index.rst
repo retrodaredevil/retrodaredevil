@@ -6,3 +6,5 @@ Linux
   filesystem
   ssh
   commands
+  users
+  software
