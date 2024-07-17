@@ -1,5 +1,5 @@
-July 2024 Setting Up VyOS as a Router
-========================================
+July 2024 Setting Up VyOS as a Router inside Proxmox
+=====================================================
 
 June 30 - Building VyOS
 -------------------------
@@ -97,9 +97,10 @@ Let's do some simple configuration now...
   set nat source rule 100 source address '192.168.44.0/24'
   set nat source rule 100 translation address masquerade
 
-Now to configure the firewall (https://docs.vyos.io/en/latest/quick-start.html#firewall)
 
-.. code-block:: shell
+
+
+  # ===== Firewall (https://docs.vyos.io/en/latest/quick-start.html#firewall) =========
 
   set firewall group interface-group WAN interface eth0
   set firewall group interface-group LAN interface eth1
@@ -309,4 +310,183 @@ After a reboot, you should see (kernel) log messages such as these in ``journalc
 
   igb 0000:03:00.0 enpxleftbottom: renamed from enp3s0f0
   igb 0000:03:00.1 enpxlefttop: renamed from enp3s0f1
-  igb 0000:01:00.0 enpxrightbottom: renamed from enp1s0f0
+  ...
+
+Now that we have all 4 ports consistently named, we need to pass them through to VyOS.
+I'm going to do this with commands, but you can do it through the UI if you'd like.
+
+First, ``qm help set`` shows this:
+
+.. code-block::
+
+  ...
+
+  -net[n]    [model=]<enum> [,bridge=<bridge>] [,firewall=<1|0>]
+             [,link_down=<1|0>] [,macaddr=<XX:XX:XX:XX:XX:XX>]
+             [,mtu=<integer>] [,queues=<integer>] [,rate=<number>]
+             [,tag=<integer>] [,trunks=<vlanid[;vlanid...]>]
+             [,<model>=<macaddr>]
+             Specify network devices.
+
+  ...
+
+So we'll use this:
+
+.. code-block:: shell
+
+  sudo qm set 204 -net0 model=virtio,bridge=vmbr0,macaddr=02:C2:2F:4B:CB:80
+  # Although I may not use the vmbr1debug port (physically my only internal port), adding it here
+  sudo qm set 204 -net1 model=virtio,bridge=vmbr1debug,macaddr=02:C2:2F:4B:CB:91
+  sudo qm set 204 -net2 model=virtio,bridge=vmbr2wan,macaddr=02:C2:2F:4B:CB:92
+  sudo qm set 204 -net3 model=virtio,bridge=vmbr3lan1,macaddr=02:C2:2F:4B:CB:93
+  sudo qm set 204 -net4 model=virtio,bridge=vmbr4lan2,macaddr=02:C2:2F:4B:CB:94
+  sudo qm set 204 -net5 model=virtio,bridge=vmbr5lan3,macaddr=02:C2:2F:4B:CB:95
+
+.. note::
+
+  I'm using this ``02:C2:2F:4B:CB:XX`` MAC address prefix to easily identify the network interfaces I added.
+  It's just a random unicast MAC address prefix, nothing special about it.
+  I boot into VyOS and eth1 is vmbr2. Not ideal. I already have to add 2 to convert (x = y + 2) from lanx to vmbrulanx.
+
+.. note::
+
+  I made a mistake a couple of times while editing that block of commands, and to fix it, I would delete all of those
+  interfaces within Proxmox, and then run the updated commands.
+
+Now in VyOS, I run this:
+
+.. code-block:: shell
+
+  # NOTE: **Don't use this without reading the paragraphs below**
+  set interfaces ethernet eth0 hw-id '02:C2:2F:4B:CB:80'
+  set interfaces ethernet eth1 hw-id '02:C2:2F:4B:CB:91'
+  set interfaces ethernet eth2 hw-id '02:C2:2F:4B:CB:92'
+  set interfaces ethernet eth3 hw-id '02:C2:2F:4B:CB:93'
+  set interfaces ethernet eth4 hw-id '02:C2:2F:4B:CB:94'
+  set interfaces ethernet eth5 hw-id '02:C2:2F:4B:CB:95'
+
+Ok, I run those, and on ``commit``, ``eth0`` did not exist!
+There was an interface called ``e3``, though.
+I could instead use  the e3 interface and the eth1, eth2, etc interfaces, but that's dumb.
+I'd rather have consistent names.
+So, let's just try what we tried above in Proxmox.
+Remember none of those configuration changes saved, so we don't have to worry about them affecting the system.
+
+Ok, I found the problem! ``/config/config.boot`` has eth0 with a different hardware ID.
+So I actually need to edit that file directly and change the hw-id of it.
+Once I did that, I reboot and then run those commands again and then I can commit and save.
+You might not have this problem if you put in the Proxmox net0 through net5 before starting the container.
+
+Now I go back to my initial configuration, and edit some references to eth0 and eth1 to say
+eth2 and eth3, which would be the left bottom (WAN) and left top (LAN1) ports.
+From those ports, it should be able to serve as a simple router.
+
+Let's edit this configuration to work with our network interfaces.
+In the above example (way up there), we used eth0 for WAN and eth1 for LAN.
+In this configuration we're going to have, vmbr2wan (eth2) as WAN and then vmbr0 (eth0) as the LAN.
+So we'll replace the above eth0 with eth2, and replace eth1 with eth0.
+
+.. code-block:: shell
+
+  configure
+
+  set interfaces ethernet eth2 address dhcp
+  set interfaces ethernet eth2 description 'OUTSIDE'
+  set interfaces ethernet eth0 address '192.168.44.1/24'
+  set interfaces ethernet eth0 description 'LAN'
+
+
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option default-router '192.168.44.1'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option name-server '192.168.44.1'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 option domain-name 'vyos.net'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 lease '86400'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 range 0 start '192.168.44.100'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 range 0 stop '192.168.44.189'
+  set service dhcp-server shared-network-name LAN subnet 192.168.44.0/24 subnet-id '1'
+
+  set service dns forwarding cache-size '0'
+  set service dns forwarding listen-address '192.168.44.1'
+  set service dns forwarding allow-from '192.168.44.0/24'
+
+  set nat source rule 100 outbound-interface name 'eth2'
+  set nat source rule 100 source address '192.168.44.0/24'
+  set nat source rule 100 translation address masquerade
+
+
+
+
+  # ===== Firewall (https://docs.vyos.io/en/latest/quick-start.html#firewall) =========
+
+  set firewall group interface-group WAN interface eth2
+  set firewall group interface-group LAN interface eth0
+  set firewall group network-group NET-INSIDE-v4 network '192.168.44.0/24'
+
+
+
+  # We do option 1
+  set firewall global-options state-policy established action accept
+  set firewall global-options state-policy related action accept
+  set firewall global-options state-policy invalid action drop
+
+
+
+  # block incoming traffic
+  set firewall ipv4 name OUTSIDE-IN default-action 'drop'
+
+  set firewall ipv4 forward filter rule 100 action jump
+  set firewall ipv4 forward filter rule 100 jump-target OUTSIDE-IN
+  set firewall ipv4 forward filter rule 100 inbound-interface group WAN
+  set firewall ipv4 forward filter rule 100 destination group network-group NET-INSIDE-v4
+  # By default, block traffic to router that isn't explicitly allowed
+  set firewall ipv4 input filter default-action 'drop'
+
+
+
+  # Allow management access (allowing SSH)
+  set firewall ipv4 name VyOS_MANAGEMENT default-action 'return'
+
+
+  set firewall ipv4 input filter rule 20 action jump
+  set firewall ipv4 input filter rule 20 jump-target VyOS_MANAGEMENT
+  set firewall ipv4 input filter rule 20 destination port 22
+  set firewall ipv4 input filter rule 20 protocol tcp
+
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 15 action 'accept'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 15 inbound-interface group 'LAN'
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 action 'drop'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 recent count 4
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 recent time minute
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 state new
+  set firewall ipv4 name VyOS_MANAGEMENT rule 20 inbound-interface group 'WAN'
+
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 action 'accept'
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 state new
+  set firewall ipv4 name VyOS_MANAGEMENT rule 21 inbound-interface group 'WAN'
+
+
+
+  # Allow Access to services
+  set firewall ipv4 input filter rule 30 action 'accept'
+  set firewall ipv4 input filter rule 30 icmp type-name 'echo-request'
+  set firewall ipv4 input filter rule 30 protocol 'icmp'
+  set firewall ipv4 input filter rule 30 state new
+
+  set firewall ipv4 input filter rule 40 action 'accept'
+  set firewall ipv4 input filter rule 40 destination port '53'
+  set firewall ipv4 input filter rule 40 protocol 'tcp_udp'
+  set firewall ipv4 input filter rule 40 source group network-group NET-INSIDE-v4
+
+
+  set firewall ipv4 input filter rule 50 action 'accept'
+  set firewall ipv4 input filter rule 50 source address 127.0.0.0/8
+
+When we run this again, for most of these rules we will get ``Configuration path: [...] already exists``.
+You can ignore those. Those occurs occur when we run commands that don't change the configuration at all.
+To get those rules to commit and save, I have to delete a bunch of stuff from ``/config/config.boot``.
+Eventually it works. Also pro-tip, make sure the mounted file that you source is updated as you expect it to be.
+
+As of now, only devices on vmbr0 (my internal LAN for VMs/LXCs) are on the router's LAN network.
+I should be able to plug in the WAN port and have the router actually routing packets on the LAN.
+Next step is to test that, then to add physical LANs.
