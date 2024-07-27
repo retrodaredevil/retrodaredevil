@@ -11,6 +11,7 @@ Many times, these notes are informal and incomplete.
   docker/index
   electrical/index
   open-source-applications
+  firefox
   keys
   wii-mod
   3ds-mod

@@ -103,3 +103,6 @@ Complaints
   * No function overloading!
 
     * A workaround is that you can generic with union types, however this has the downside that it will not work for receiver functions, because receiver functions cannot have generics
+
+Things to look at:
+* A take on Go's implicit interfaces: https://clipperhouse.com/c-sharp-implicit-interfaces/
