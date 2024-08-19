@@ -29,3 +29,4 @@ These are not as polished as a formal blog post.
   2024-04-bits
   2024-05-bits
   2024-07-vyos
+  2024-08-bits

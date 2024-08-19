@@ -1,0 +1,165 @@
+August 2024 Bits
+==================
+
+
+August 4 - Using K3b to rip CDs
+--------------------------------
+
+K3b can be used to rip CDs!
+Here's "Ripped files pattern" I use:
+
+.. code-block::
+
+  %{albumartist}/%{albumtitle}/%{number} - %{title}
+
+August 4 - Audacity Setup
+---------------------------
+
+I find that using Audacity in Flatpak is great, but takes a little bit for it to start up.
+When using the system installed Audacity, you might have to set up a few things.
+
+Open MP3 files correctly:
+
+* https://forum.audacityteam.org/t/mp3-decoding-failed-lost-sychronization/57976
+* Go to Edit > Preferences > Import / Export > Extended Import
+
+  * Create a new rule that targets the file extensions ``*.mp3`` and move ``FFmpeg-compatible files`` to the top.
+
+In the end, I ended up not using the system installed Audacity because I couldn't easily drag to move audio clips
+like I could do in my Flatpak installed version. Maybe I have an older version. Oh well...
+
+August 4 - Playing Audio CDs
+-----------------------------------------
+
+With ``mplayer``
+^^^^^^^^^^^^^^^^^
+
+mplayer (``apt install -y mplayer``) is a great way to play CDs via the command line.
+It gets out of your way pretty nicely, but skipping to a certain point in a track isn't easy.
+
+.. code-block::
+
+  mplayer -cdrom-device /dev/cdrom  cdda:// -cache 5000
+
+With VLC
+^^^^^^^^^
+
+VLC is OK at playing CDs, as long as you open the media in Media > Open Media > Disc and manually enter the path to your CD (usually ``/dev/cdrom``).
+The main problem with VLC is that it doesn't have gapless playback: https://code.videolan.org/videolan/vlc/-/merge_requests/94
+
+With Rhythmbox
+^^^^^^^^^^^^^^^
+
+Rhythmbox is better than VLC at playing CDs.
+To get truely gapless playback, you need to go into preferences and enable "Crossfade between tracks",
+then set the duration to 0.0 seconds (which means there won't actually be a crossfade).
+There is still a noticeable glitch between tracks, but it's better than VLC.
+
+With cmus
+^^^^^^^^^^
+
+Install cmus, launch it, then run ``:add cdda://``. You'll have to wait a while for it to load tracks.
+
+With DeaDBeeF Player
+^^^^^^^^^^^^^^^^^^^^^
+
+https://deadbeef.sourceforge.io/download.html
+
+This option worked the best out of the box.
+It had gapless playback without any fiddling.
+
+Don't use
+^^^^^^^^^^^^^^^^^^^
+
+* https://apps.kde.org/dragonplayer/ - no gapless playback, although it has a simple interface.
+* https://flathub.org/apps/info.smplayer.SMPlayer - easiest way to install is Flatpak, and I couldn't get it to easily see my CD and play it.
+* https://cmus.github.io While it's a nice command line UI (with VI like bindings). It's not intuitive, and does not load CDs quickly.
+
+Conclusion
+^^^^^^^^^^^
+
+I might eventually try mpd, which has many, many options.
+It's stupid that so many players
+
+August 8 - Playing Surround Sound
+------------------------------------
+
+Plexamp does not seem to support playing flac files encoded for a 5.1 system.
+However, you can configure VLC to play 5.1 files:
+
+Tools > Preferences > Show settings = All > Audio > Output Modules > ALSA > Audio output channels = Surround 5.1
+
+Sources on Plexamp being terrible at multi channel audio:
+
+* https://www.reddit.com/r/plexamp/comments/11ond6a/how_does_plexamp_handle_multichannel_flacs_and/
+* https://www.reddit.com/r/plexamp/comments/18ocros/does_plexamp_support_dts_51_wav_audio/
+
+Finding Surround Sound Albums
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Playing surround sound is one thing, but finding albums that are released with surround sound are another.
+Some artists released SACDs long before Blu-rays were a thing.
+And now, it seems that for some albums, the only way to hear their 5.1 version is to subscribe to
+Apple Music, Tidal, or Amazon Music.
+
+When an album gets a Blu-ray release, it's usually done by
+
+Albums to listen to in surround sound:
+
+* https://www.reddit.com/r/SurroundAudiophile/comments/uajm9z/comment/i5yghhz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+* https://www.discogs.com/search/?sort=have%2Cdesc&ev=gs_mc&format_exact=Multichannel
+* https://www.reddit.com/r/AppleMusic/comments/13ftsw3/comment/jjwzmev/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+August 9 - Thinking about a DSL for controlling LEDs
+-----------------------------------------------------
+
+My project, `led-machine-plus <https://github.com/retrodaredevil/led-machine-plus>`_ has a janky, but powerful language
+you use to control the patterns of LEDs.
+Take this pattern:
+
+.. code-block::
+
+  (pixel #000 #512 #000 #936 #000 #512 #000 stop) 22 twinkle crawl
+
+This is the one line version of this:
+
+.. code-block::
+
+  pixel #000 #512 #000 #936 #000 #512 #000
+  stop
+  22 twinkle
+  pattern crawl
+
+(Although it's worth noting that the one line version behaves differently if you were to try to set the global pattern,
+but that's besides the point for the moment).
+
+The current language is powerful, but also not as strict as a normal programming language or DSL.
+My SolarThing project has a DSL called NotationScript with an implementation called ActionScript.
+NotationScript itself is a DSL designed to be compiled to JSON in a very specific way.
+If we were to think of an "LEDLang" implementation, it could express things in ways such as this:
+
+.. code-block::
+
+  twinkle(speed=crawl) : pixel(speed=stop) {
+    #000
+    #512
+    #000
+    #936
+    #000
+    #512
+    #000
+  }
+
+At the time of writing, I would guess that NotationScript currently would not like the use of ``#000``,
+but that can be fixed later.
+
+Let's define some gradients
+
+.. code-block::
+
+  blend(speed=slow) {
+    red
+    green
+    blue
+  }
+

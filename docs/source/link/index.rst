@@ -3,6 +3,7 @@ Links
 
 .. toctree::
 
+  cheatsheet
   dev/index
   text/index
   graphic/index
