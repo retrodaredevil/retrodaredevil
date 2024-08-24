@@ -19,7 +19,7 @@ Desktop Apps
 * k3b: https://invent.kde.org/multimedia/k3b | https://github.com/KDE/k3b
 
   * Burning optical media
-  * ``sudo apt install k3b``
+  * ``sudo apt install k3b flac`` (install flac so you can RIP CD Audio to FLAC files)
   * Alternative: https://gitlab.gnome.org/GNOME/brasero
 
 

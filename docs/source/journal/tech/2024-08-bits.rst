@@ -6,11 +6,15 @@ August 4 - Using K3b to rip CDs
 --------------------------------
 
 K3b can be used to rip CDs!
+Make sure to ``sudo apt install flac`` so you can rip to FLAC!
 Here's "Ripped files pattern" I use:
 
 .. code-block::
 
-  %{albumartist}/%{albumtitle}/%{number} - %{title}
+  %{albumartist}/%{albumtitle} (%{year})/%{number} - %{title}
+
+MusicBrainz Picard can add metadata to the CD so it has album art.
+https://picard-docs.musicbrainz.org/en/workflows/workflow_cd.html
 
 August 4 - Audacity Setup
 ---------------------------
@@ -163,3 +167,125 @@ Let's define some gradients
     blue
   }
 
+The above notes are just that, notes. Nothing there is final and is mostly just early designs of a potential DSL.
+
+August 19 - Compressing my music library (in a lossy way)
+-----------------------------------------------------------
+
+I want to compress my music library.
+Not so that it can fit on my phone, but rather so it can fit on my 3DS (although now that I think about it, having it on my phone wouldn't be a bad idea).
+
+First, we look at the `Nintendo 3DS Sound Overview <https://en-americas-support.nintendo.com/app/answers/detail/a_id/649/~/nintendo-3ds-sound-overview>`_.
+
+``.mp3``, ``.m4a`` (AAC), ``.mp4``, and ``.3gp`` are the supported formats.
+If I had the option of a different format, I might go with something more modern such as OPUS, but I think M4A will be my goto here.
+I have a little over 30 days worth of music, and I want to compress it down to something less than 30GB.
+At a bitrate of 64 kbps, I should be able to compress it to about 20GB.
+
+To convert, I could use something like ffmpeg, but I would have to create a script myself to convert the entire library.
+Here are some tools I could use:
+
+* ffmpeg
+* `pydub <https://github.com/jiaaro/pydub>`_ (uses ffmpeg under the hood)
+
+Here's people talking about compressing their music libraries:
+
+* https://www.reddit.com/r/Music/comments/v1y1lx/is_there_a_good_way_to_convert_your_entire_music/
+* https://www.reddit.com/r/audio/comments/mzpx2t/is_compressing_a_music_file_a_good_or_terrible/
+* https://www.reddit.com/r/musichoarder/comments/10tg8lx/anyway_to_get_entire_music_library_on_my_phone/
+* https://www.reddit.com/r/musichoarder/comments/qw46r1/any_good_software_for_lowering_mp3_bitrate_for/
+
+  * More love for OPUS here
+  * One of the open source solutions brought up here is https://soundconverter.org/
+
+Installing soundconverter is as easy as going here, and clicking install: https://xtradeb.net/apps/soundconverter/
+
+To run it:
+
+.. code-block::
+
+  soundconverter
+
+Testing out soundconverter works pretty well.
+It froze midway through the conversion process, but still converted every file correctly, even after it froze.
+
+Alright, so soundconverter is cool, but I'm going to eventually need to make a tool that does this automatically.
+Before making that tool, I need to be able to convert a file to m4a at my desired bitrate.
+
+Here's how to do it: https://trac.ffmpeg.org/wiki/Encode/AAC#Examples
+
+.. code-block::
+
+  ffmpeg -i input.flac -c:a libfdk_aac -b:a 64k output.m4a
+
+Problem is that ffmpeg needs to be compiled with a ``--enable-libfdk-aac`` flag.
+So the command doesn't work!
+If we don't care about the best of the best quality, then we can just replace that with ``aac``.
+Now we could do variable bit rate, but for the ``aac`` option,
+that apparently gets worse results than just using a constant bit rate.
+Now we need to use ``-vn`` to tell it to ignore any video data (I'm not sure why -- maybe the album art?).
+Final command is:
+
+.. code-block::
+
+  ffmpeg -vn -i input.flac -c:a aac -b:a 48k output.m4a
+
+I've found that 48k is fairly compressed, but doesn't sound as bad as 32k.
+So I'll stick with 48k which I think still sounds good enough.
+This results in about ``372307`` bytes per minute.
+Which comes out to about 16.084 GB per 30 days of music.
+To keep the metadata, we need the ``-map_metadata 0`` flag:
+
+.. code-block::
+
+  ffmpeg -vn -i input.flac -c:a aac -b:a 48k -map_metadata 0 output.m4a
+
+I have about 60GB free on my 3DS's SD card, so this should be perfect for my ever growing Music library.
+Let's test this real quick. Ok, nope my 3DS doesn't want to play that file. Maybe it doesn't like the bitrate?
+Either way, let's try a different format. mp3 it is!
+
+With mp3, it's about ``480280`` bytes per minute or 20.75 GB per 30 days of music.
+And that's at 64kbps!
+
+August 21 - Making the program to compress files
+-------------------------------------------------
+
+I made msic in about an hour: https://github.com/retrodaredevil/msic
+
+.. note::
+
+  I used this to determine how long something is: https://superuser.com/a/945604
+
+I added a few more flags outside of that initial hour. It's a fairly simple program.
+After I tested it, my 3DS happily played the MP3 files.
+That's pretty cool. Now I want to make some playlists.
+Before looking at playlists, here are some gems of history about the 3DS Sound application:
+
+* Using 3DS Sound as an MP3 Player - https://www.ign.com/wikis/ar-games/Nintendo_3DS_Sound_Guide
+* Unlocking features - https://www.nintendolife.com/forums/3ds/3ds_sound_usage_tips
+* Streetpass functionality - https://en-americas-support.nintendo.com/app/answers/detail/a_id/273/~/how-to-use-streetpass-with-nintendo-3ds-sound
+
+Those links are just some cool stuff I came across. Wanted to leave them there.
+The useful link is this: https://www.3dbrew.org/wiki/Nintendo_3DS_Sound
+It tells us that playlists are stored here on the SD card:
+
+.. code-block::
+
+  /Nintendo 3DS/Private/00020500/playlist
+
+That link also has the format of a playlist.
+But wait! Before we create a program to convert m3u playlists to this proprietary one,
+it is also mentioned that the application supports m3u playlists!
+
+It would be cool to export all my Plex playlists as m3u playlists.
+Doing this would also be a nice backup option to make sure Plex isn't doing anything funny with my playlists.
+It's worth noting that if you remove an album from your library, then add it back, Plex
+usually won't retain the playlists those songs were on, or the ratings of those songs.
+
+I think I'll come back to this eventually, so for now here are some links that will guide me in the future:
+
+* https://github.com/WebTools-NG/WebTools-NG/wiki
+
+  * https://www.ryananddebi.com/2021/05/10/plex-export-playlists-to-m3u/
+
+* https://github.com/Tautulli/Tautulli/wiki/Exporter-Guide

@@ -19,3 +19,4 @@ Many times, these notes are informal and incomplete.
   steam
   simutrans
   i-dislike-go
+  long-term-data-storage
