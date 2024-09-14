@@ -13,8 +13,16 @@ Here's "Ripped files pattern" I use:
 
   %{albumartist}/%{albumtitle} (%{year})/%{number} - %{title}
 
-MusicBrainz Picard can add metadata to the CD so it has album art.
+MusicBrainz Picard can add metadata to the CD rip so it has album art.
 https://picard-docs.musicbrainz.org/en/workflows/workflow_cd.html
+
+.. note::
+
+  If you install Picard through flatpak, make sure to give it access to external drives if necessary:
+
+  .. code-block:: shell
+
+    flatpak override --user --filesystem=/path/to/dir org.musicbrainz.Picard
 
 August 4 - Audacity Setup
 ---------------------------
@@ -83,7 +91,7 @@ Conclusion
 ^^^^^^^^^^^
 
 I might eventually try mpd, which has many, many options.
-It's stupid that so many players
+It's stupid that so many players don't support gapless playback.
 
 August 8 - Playing Surround Sound
 ------------------------------------
@@ -113,6 +121,16 @@ Albums to listen to in surround sound:
 * https://www.reddit.com/r/SurroundAudiophile/comments/uajm9z/comment/i5yghhz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 * https://www.discogs.com/search/?sort=have%2Cdesc&ev=gs_mc&format_exact=Multichannel
 * https://www.reddit.com/r/AppleMusic/comments/13ftsw3/comment/jjwzmev/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+Additionally, you can use this to figure out what has released in surround: https://bendodson.com/projects/spatial-audio-finder/
+
+Also, this is cool: https://immersiveaudioalbum.com/about/
+
+Oh, and here's someone's channel who makes surround mixes: https://www.youtube.com/@5.1-surround-mixes-by-mg
+
+And here's a link talking about the lack of download for RAM's dolby atmos mix: https://immersiveaudioalbum.com/daft-punk-random-access-memories-dolby-atmos/
+
+Here's a link from Dolby themselves: https://www.dolby.com/experience/home-entertainment/articles/how-to-listen-to-music-in-dolby-atmos/
 
 August 9 - Thinking about a DSL for controlling LEDs
 -----------------------------------------------------
