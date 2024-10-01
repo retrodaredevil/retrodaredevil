@@ -27,3 +27,9 @@ https://www.askvg.com/tip-restore-compact-mode-density-option-in-firefox-customi
 Go to ``about:config`` and enable ``browser.compactmode.show``.
 Now right click on the toolbar and click customize toolbar.
 Now change the density to compact.
+
+Other about:config settings
+-----------------------------
+
+* ``browser.compactmode.show`` mentioned above
+* ``extensions.pocket.enabled`` to false

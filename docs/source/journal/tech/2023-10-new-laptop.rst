@@ -584,3 +584,29 @@ Because of this, I prefer to have things like Firefox and IntelliJ have the syst
 On Firefox, right click on title bar, then select "Customize Toolbar". In the bottom left, select "Title Bar".
 
 For IntelliJ: Appearance & Behavior > Appearance > UI Options > "Merge main menu with window title": Uncheck this
+
+September 14, 2024 - alacritty in nautilus
+----------------------------------------------
+
+Adding this here because I don't feel like creating another page
+
+https://askubuntu.com/a/1275458
+
+.. code-block:: shell
+
+  sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /home/lavender/.local/bin/alacritty 50
+  sudo update-alternatives --config x-terminal-emulator
+
+Note that this doesn't work at the time of writing. It might just not work...
+I'll report back eventually. Maybe I'll delete this section.
+
+I also gave this a try: https://github.com/Stunkymonkey/nautilus-open-any-terminal
+
+.. code-block:: shell
+
+  sudo apt-get install -y python3-pip
+  pip install --user nautilus-open-any-terminal
+  glib-compile-schemas ~/.local/share/glib-2.0/schemas/
+
+I could not get either of those to work.
+Not sure why. That's a problem for later.
