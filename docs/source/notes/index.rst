@@ -20,3 +20,4 @@ Many times, these notes are informal and incomplete.
   simutrans
   i-dislike-go
   long-term-data-storage
+  check-this-out
