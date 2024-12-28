@@ -22,6 +22,8 @@ Non-music related features:
 
 * https://forums.plex.tv/t/plexhtpc-plex-plexamp-flatpak-aarch64-arm-support/884994
 * https://forums.plex.tv/t/very-popular-myplex-buffer-content-youtube-style/20601
+* https://forums.plex.tv/t/show-names-for-audio-tracks-and-subtitles-in-all-apps/73435
+* https://forums.plex.tv/t/correctly-identify-display-dolby-atmos-dts-x-and-dts-hd-ma-audio-tracks-in-plex-clients/209431
 
 Plex Music Release Type
 ---------------------------
