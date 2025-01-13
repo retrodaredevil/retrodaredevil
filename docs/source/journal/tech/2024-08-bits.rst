@@ -143,7 +143,7 @@ Take this pattern:
 
   (pixel #000 #512 #000 #936 #000 #512 #000 stop) 22 twinkle crawl
 
-This is the one line version of this:
+This is the multi-line version of this:
 
 .. code-block::
 

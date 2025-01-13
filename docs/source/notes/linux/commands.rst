@@ -3,6 +3,17 @@ Commands
 
 Contains useful commands
 
+Unix Commands
+--------------
+
+.. code-block::
+
+  cat /etc/passwd | column -t -s ':' -N USERNAME,PW,UID,GUID,COMMENT,HOME,INTERPRETER -H PW
+
+* ``column`` command - https://www.youtube.com/watch?v=uL7KvRskeog
+
+  * Can even be given arguments to output JSON from CSV files
+
 Public IP
 -------------
 
