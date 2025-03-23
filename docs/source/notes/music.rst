@@ -17,6 +17,9 @@ Plex Features I Want
   * Worth noting that ``.lrc`` files are already supported: https://support.plex.tv/articles/215916117-adding-local-lyrics/
 
 * https://forums.plex.tv/t/multichannel-flac-and-high-resolution-audio-support-for-music-in-nvidia-shield-plex-app/796933
+* https://www.reddit.com/r/plexamp/comments/11ikzki/how_do_i_turn_off_automatically_rating_different/
+
+  * Talks about rating different versions of an album differently and also maybe if we have multiple versions of a track, it shouldn't show up in smart playlists multiple times
 
 Non-music related features:
 

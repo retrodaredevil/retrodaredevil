@@ -20,27 +20,8 @@ I'm Lavender! I enjoy working on different projects in my free time.
 
 [FRC 1444 Robotics](https://github.com/frc1444/) - A collection of repositories I contributed to during high school.
 
-* [robot2020](https://github.com/frc1444/robot2020) (Java)
-* [robo-sim](https://github.com/frc1444/robo-sim) (Kotlin)
-
 #### Alternative profiles: 
 
 * [GitLab](https://gitlab.com/retrodaredevil)
-  * Home to [Gradema](https://gitlab.com/classroomcode/gradema/gradema)
 * [Stackoverflow](https://stackoverflow.com/users/5434860/retodaredevil)
 * [LinkedIn](https://www.linkedin.com/in/lavender-shannon-8ab43b14b/)
-
-<!--
-**retrodaredevil/retrodaredevil** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
