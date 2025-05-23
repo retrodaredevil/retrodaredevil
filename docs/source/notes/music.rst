@@ -21,6 +21,9 @@ Plex Features I Want
 
   * Talks about rating different versions of an album differently and also maybe if we have multiple versions of a track, it shouldn't show up in smart playlists multiple times
 
+* https://forums.plex.tv/t/can-you-add-playlist-folders-to-plex-or-for-plex-pass-users/430389
+* https://forums.plex.tv/t/download-entire-library-or-playlist-in-plexamp/646153
+
 Non-music related features:
 
 * https://forums.plex.tv/t/plexhtpc-plex-plexamp-flatpak-aarch64-arm-support/884994
