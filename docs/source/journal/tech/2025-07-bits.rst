@@ -1,0 +1,78 @@
+July 2025 Bits
+====================
+
+
+July 10 - Armbian Setup on Orange Pi One
+--------------------------------------------------
+
+I have an Orange Pi One.
+I installed Armbian.
+
+I logged in with root:1234, choose en_US-UTF-8.
+I attempted to set up the WiFi by putting the SD card in my computer and configuring stuff like wpa_supplicant,
+but no luck.
+
+I ended up configuring it manually and this is what ``/etc/netplan/armbian.conf`` contained afterwards
+
+.. code-block:: yaml
+
+  network:
+    version: 2
+    renderer: networkd
+    wifis:
+      wlx000f6009be25:
+        dhcp4: true
+        dhcp6: true
+        macaddress: "00:0f:60:09:be:25"
+        access-points:
+          "WiFi_2GHz":
+            auth:
+              key-management: "psk"
+              password: "mypassword"
+
+* https://www.armbian.com/orange-pi-one/
+
+  * https://dl.armbian.com/orangepione/Bookworm_current_minimal
+
+* https://docs.armbian.com/User-Guide_Networking/#connecting-to-wifi-network
+
+I of course used
+
+.. code-block::
+
+  sudo apt install -y sudo vim git tmux less curl wget make stow net-tools iputils-tracepath traceroute netcat-openbsd tree man-db file htop gpg-agent rsync pwgen
+
+to install some stuff, and then I installed docker https://docs.docker.com/engine/install/debian/
+
+.. code-block::
+
+  sudo usermod -aG docker lavender
+
+
+.. code-block::
+
+  ssh-keygen -t ed25519
+  # Now set up lavender-config stuff :)
+
+Now to do led stuff.
+diozero does not support PWM control, so we use SPI.
+
+.. code-block::
+
+  sudo apt install git build-essential
+  echo "overlays=spi-spidev" | sudo tee /boot/armbianEnv.txt
+  echo "param_spidev_spi_bus=0" | sudo tee /boot/armbianEnv.txt
+
+.. code-block::
+
+  sudo apt install wireguard
+
+I rebooted and now the system is screwed up.
+
+I tried replacing ``rootdev=UUID=fe68f99c-61aa-4ebd-b02a-d5cda2484d77`` line with ``rootdev=/dev/mmcblk0p1``
+in ``armbianEnv.txt``.
+Did not work.
+
+Ok.
+I'm giving up.
+Maybe my SD card is corrupted, but honestly this Orange Pi One isn't worth the hassle it has caused me.
