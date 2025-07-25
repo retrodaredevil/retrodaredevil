@@ -76,3 +76,105 @@ Did not work.
 Ok.
 I'm giving up.
 Maybe my SD card is corrupted, but honestly this Orange Pi One isn't worth the hassle it has caused me.
+
+July 25 - Local LLM Models
+------------------------------
+
+Was playing with some local LLM models today.
+I use Ollama with Open WebUI.
+Here are some notes on the models I've tried out:
+
+* llama3.1:8b
+
+  * I've had this downloaded a while
+  * Great model, somewhat slow locally
+
+* llama3.2:3b
+
+  * Just tried this today
+  * Very fast output
+
+* qwen3:8b
+
+  * Tried today.
+  * This models thinks
+  * Output seems extremely solid, I'll want to play with this more
+  * Model is kept loaded for 5ish minutes I think. You can manually unload it. During this time your GPU will be using a lots of power
+
+* deepseek-r1:8b
+
+  * Tried today
+  * This model thinks for a pretty long time locally
+  * Output seems pretty good. I'll use this if I'm OK with waiting for a bit
+
+Local models have come a long way since I've last played with them.
+I don't know how often I'll use them over what OpenAI offers, but they're pretty cool.
+
+Another thing I configured today is making sure my ollama Docker container actually uses my nvidia GPU.
+Giving it access to my GPU isn't enough, as sometimes it might default to my integrated graphics.
+You have to be explicit. Not sure if all of this is necessary, but some of it is:
+
+.. code-block:: yaml
+
+  services:
+    ollama:
+      image: ollama/ollama:latest
+      runtime: nvidia
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                capabilities: [gpu]
+                count: all
+      environment:
+        - NVIDIA_VISIBLE_DEVICES=all
+        - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+        - CUDA_VISIBLE_DEVICES=0
+
+Some things I left out of the compose file, but those configuration options worked great for me.
+I find it interesting that Fedora itself doesn't use my NVIDIA GPU for anything,
+but power-wise, that's probably for the best.
+I might eventually need to make sure my dedicated GPU is actually used when I game, but that's a problem for another day.
+
+Some more models I want to try out are
+
+* qwen2.5vl:7b
+* qwen2.5vl:3b
+* gemma3:4b
+* gemma3:1b
+* deepseek-r1:1.5b
+* gemma3n:e2b
+* gemma3n:e4b (latest)
+* qwen3:4b qwen3:1.7b qwen3:0.6b
+
+July 25 - Thinking about reverse proxies besides Caddy
+-------------------------------------------------------
+
+I've become frustrated with Caddy.
+`It doesn't always work on iOS devices <https://caddy.community/t/issue-when-ios-devices-try-to-use-a-website-powered-by-caddy/25281>`_
+(OK maybe that's not a Caddy problem).
+Caddy's integration with authentication frontends seemed painful and not well supported the last time I tried it.
+Anyways, I won't go into all my frustrations now.
+Caddy has been great, but I want to think about other stuff.
+
+NGINX
+^^^^^
+
+Seems like a good option, but from what I can tell, everything is more complicated with it.
+It's not designed to be simple like Caddy is.
+Plus if you want to automate certificate renewals, you'll need to set up certbot.
+Setting up certbot is doable in Docker, but the whole idea of needing two Docker containers for a simple reverse proxy gives me a bad taste.
+
+Additionally, it seems that nginx cannot substitute in environment variables into its config,
+so it's configuration is not great.
+
+Traefik
+--------
+
+This option seems decent enough.
+It should be able to handle DNS challenges by itself with a fairly simple YAML config.
+
+Yeah, I haven't put too much research into this, but this sure seems like the thing to try.
+
+That's it. That's all I have for now...
